@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>杨妙绮的“好习惯成长存折”</title>
+<style>
+  @page {
+    size: A4 portrait;
+    margin: 8mm 10mm;
+  }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+    color: #2c3e50;
+    background: #fff;
+    line-height: 1.35;
+    font-size: 11px;
+  }
+  .container {
+    width: 100%;
+    max-width: 190mm;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  
+  /* Header */
+  .header {
+    text-align: center;
+    background: linear-gradient(135deg, #fff3bf 0%, #ffd43b 50%, #ff922b 100%);
+    padding: 8px 12px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(255, 146, 43, 0.2);
+    border: 1.5px solid #ffa94d;
+  }
+  .header h1 {
+    font-size: 19px;
+    font-weight: 800;
+    color: #d9480f;
+    letter-spacing: 1.5px;
+    margin-bottom: 3px;
+  }
+  .meta-bar {
+    display: flex;
+    justify-content: space-around;
+    font-size: 11px;
+    font-weight: bold;
+    color: #495057;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 3px 8px;
+    border-radius: 6px;
+  }
+  .meta-item span {
+    color: #e8590c;
+  }
+
+  /* Grid Layout for Sections 1 & 2 */
+  .top-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+  }
+
+  /* Cards */
+  .card {
+    border-radius: 8px;
+    border: 1.5px solid #e9ecef;
+    background: #fff;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-body {
+    padding: 6px 8px;
+  }
+
+  /* Section Styles */
+  .earn-card {
+    border-color: #ffd8a8;
+  }
+  .earn-card .card-header {
+    background: #ffe8cc;
+    color: #d9480f;
+    border-bottom: 1.5px solid #ffd8a8;
+  }
+
+  .shop-card {
+    border-color: #bbf7d0;
+  }
+  .shop-card .card-header {
+    background: #dcfce7;
+    color: #15803d;
+    border-bottom: 1.5px solid #bbf7d0;
+  }
+
+  /* Items in Earn section */
+  .earn-item {
+    margin-bottom: 5px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed #f1f3f5;
+  }
+  .earn-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+  .item-title {
+    font-weight: 700;
+    font-size: 11px;
+    color: #343a40;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1px;
+  }
+  .item-detail {
+    font-size: 10px;
+    color: #6c757d;
+    line-height: 1.3;
+  }
+  .badge-pts {
+    background: #ffec99;
+    color: #d9480f;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-weight: 800;
+    font-size: 10.5px;
+  }
+
+  /* Shop Highlights */
+  .big-prize {
+    background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+    border: 1.5px solid #c084fc;
+    border-radius: 6px;
+    padding: 6px 8px;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  .big-prize-title {
+    font-size: 13px;
+    font-weight: 900;
+    color: #7e22ce;
+  }
+  .big-prize-pts {
+    display: inline-block;
+    background: #7e22ce;
+    color: #fff;
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-weight: 800;
+    font-size: 11px;
+    margin-top: 2px;
+  }
+  .shop-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
+    font-size: 10px;
+  }
+  .shop-row {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 5px;
+    padding: 3px 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .shop-name {
+    font-weight: 600;
+    color: #334155;
+  }
+  .shop-cost {
+    font-weight: 800;
+    color: #16a34a;
+  }
+
+  /* Weekly Tracker Table */
+  .tracker-card {
+    border-color: #bfdbfe;
+  }
+  .tracker-card .card-header {
+    background: #dbeafe;
+    color: #1d4ed8;
+    border-bottom: 1.5px solid #bfdbfe;
+  }
+  table.tracker-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 10px;
+  }
+  table.tracker-table th, table.tracker-table td {
+    border: 1px solid #cbd5e1;
+    padding: 4px 2px;
+  }
+  table.tracker-table th {
+    background: #eff6ff;
+    color: #1e40af;
+    font-weight: 700;
+  }
+  table.tracker-table .row-title {
+    font-weight: 700;
+    text-align: left;
+    padding-left: 5px;
+    background: #f8fafc;
+    color: #334155;
+    font-size: 10.5px;
+  }
+  table.tracker-table .target-cell {
+    font-weight: 600;
+    color: #0284c7;
+    background: #f0f9ff;
+  }
+  .check-box {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border: 1.5px dashed #94a3b8;
+    border-radius: 3px;
+    vertical-align: middle;
+    background: #fff;
+  }
+  .score-input {
+    color: #cbd5e1;
+    font-size: 9px;
+  }
+
+  /* Footer Rules & Signatures */
+  .footer-row {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 7px;
+  }
+  .rule-box {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 6px;
+    padding: 5px 8px;
+    font-size: 9.5px;
+    color: #92400e;
+    line-height: 1.35;
+  }
+  .rule-box strong {
+    color: #b45309;
+  }
+  .sign-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 5px 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    font-size: 10px;
+    color: #475569;
+  }
+  .sign-line {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .sign-underline {
+    flex: 1;
+    border-bottom: 1px solid #94a3b8;
+    height: 12px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>🌟 杨妙绮的“好习惯成长存折” 🌟</h1>
+    <div class="meta-bar">
+      <div class="meta-item">👧 姓名：<span>杨妙绮</span></div>
+      <div class="meta-item">📅 周次：第 <span>_____</span> 周</div>
+      <div class="meta-item">🪙 上周结余：<span>_____</span> 分</div>
+      <div class="meta-item">🎯 本周目标：<span>500</span> 分</div>
+    </div>
+  </div>
+
+  <!-- Top Row: How to Earn + Wish Shop -->
+  <div class="top-row">
+    
+    <!-- Left: Earn Rules -->
+    <div class="card earn-card">
+      <div class="card-header">
+        <span>📋 赚积分清单（我付出的努力）</span>
+        <span style="font-size: 9px; font-weight: normal; color: #b45309;">即写即评 · 当场打卡</span>
+      </div>
+      <div class="card-body">
+        
+        <div class="earn-item">
+          <div class="item-title">
+            <span>✍️ 规范练字（每周目标: 4张A4）</span>
+            <span class="badge-pts">+40分/张</span>
+          </div>
+          <div class="item-detail">
+            • 认真写完1张字帖，坐姿工整、笔顺正确得40分<br>
+            • <b>火眼晶晶奖</b>：圈出好看字，<b>每 3 个字就得 5 分</b>（多写多得）<br>
+            • <b>周全勤大礼包</b>：完成满4张额外奖励 <b>+20分</b>
+          </div>
+        </div>
+
+        <div class="earn-item">
+          <div class="item-title">
+            <span>🪢 阳光跳绳（每周目标: 4次）</span>
+            <span class="badge-pts">+25分/次</span>
+          </div>
+          <div class="item-detail">
+            • 每次跳满 500 个（可分2-3组跳完）得25分<br>
+            • <b>运动全勤奖</b>：完成满4次额外奖励 <b>+20分</b>
+          </div>
+        </div>
+
+        <div class="earn-item">
+          <div class="item-title">
+            <span>⏰ 晨间好习惯（准时出门）</span>
+            <span class="badge-pts">+10分/天</span>
+          </div>
+          <div class="item-detail">
+            • 早上约定时间前穿好衣服、不磨蹭准时出门<br>
+            • <i>严重磨蹭提醒多次导致迟到：扣20分（有1次提醒机会）</i>
+          </div>
+        </div>
+
+        <div class="earn-item">
+          <div class="item-title">
+            <span>🧹 家务小管家（独立小能手）</span>
+            <span class="badge-pts">+10~20分</span>
+          </div>
+          <div class="item-detail">
+            • 扔垃圾：<b>+10分</b> ｜ 叠衣服/晾衣服：<b>+10~20分</b><br>
+            • 洗碗/擦桌子：<b>+10~20分</b>（多劳多得）
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Right: Points Shop -->
+    <div class="card shop-card">
+      <div class="card-header">
+        <span>🎁 心愿兑换所（我的积分能换什么）</span>
+        <span style="font-size: 9px; font-weight: normal; color: #166534;">10积分 = 1元现金</span>
+      </div>
+      <div class="card-body">
+        
+        <!-- Big Prize -->
+        <div class="big-prize">
+          <div class="big-prize-title">🏰 超级梦想：去一次迪士尼乐园</div>
+          <div style="font-size: 10px; color: #6b21a8; margin: 1px 0;">✨ 年卡出游 · 努力 1.5 ~ 2 周即可达成！ ✨</div>
+          <div class="big-prize-pts">🌟 兑换需要：500 积分 🌟</div>
+        </div>
+
+        <div class="shop-grid">
+          <div class="shop-row">
+            <span class="shop-name">💰 现金零钱（存入个人小存钱罐）</span>
+            <span class="shop-cost">10分 = 1元</span>
+          </div>
+          <div class="shop-row">
+            <span class="shop-name">🍦 自选一份冰淇淋 / 甜品蛋糕</span>
+            <span class="shop-cost">30 分</span>
+          </div>
+          <div class="shop-row">
+            <span class="shop-name">📚 挑选一本喜欢的精美绘本/贴纸书</span>
+            <span class="shop-cost">150 分</span>
+          </div>
+          <div class="shop-row">
+            <span class="shop-name">🍽️ 外出吃心仪大餐（预算200~300元）</span>
+            <span class="shop-cost">200 分</span>
+          </div>
+          <div class="shop-row">
+            <span class="shop-name">🎁 挑选一个心仪的盲盒或心愿玩具</span>
+            <span class="shop-cost">300 分</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Middle: Weekly Tracker Table -->
+  <div class="card tracker-card">
+    <div class="card-header">
+      <span>📅 本周打卡记录表（完成即打勾或贴星星 ⭐）</span>
+      <span style="font-size: 9px; font-weight: normal; color: #1e40af;">每周日晚上 7:30 结算总分</span>
+    </div>
+    <div class="card-body" style="padding: 4px;">
+      <table class="tracker-table">
+        <thead>
+          <tr>
+            <th style="width: 22%;">打卡项目</th>
+            <th style="width: 10%;">目标</th>
+            <th style="width: 9%;">周一</th>
+            <th style="width: 9%;">周二</th>
+            <th style="width: 9%;">周三</th>
+            <th style="width: 9%;">周四</th>
+            <th style="width: 9%;">周五</th>
+            <th style="width: 9%;">周六</th>
+            <th style="width: 9%;">周日</th>
+            <th style="width: 14%;">本周小计</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="row-title">✍️ 练字帖 (每次1张)</td>
+            <td class="target-cell">每周 4 张</td>
+            <td><div class="check-box"></div></td>
+            <td><div class="check-box"></div></td>
+            <td><div class="check-box"></div></td>
+            <td><div class="check-box"></div></td>
+            <td><div class="check-box"></div></td>
+            <td><div class="check-box"></div></td>
+            <td><div class="check-box"></div></td>
+            <td>___ 张 (得___分)</td>
+          </tr>
+          <tr>
+            <td class="row-title">🪢 跳绳 (每次500个)</td>
+            <td class="target-cell">每周 4 次</td>
+            <td><div class="check-box"></div></td>
+            <td><div class="check-box"></div></td>
+            <td><div class="check-box"></div></td>
+            <td><div class="check-box"></div></td>
+            <td><div class="check-box"></div></td>
+            <td><div class="check-box"></div></td>
+            <td><div class="check-box"></div></td>
+            <td>___ 次 (得___分)</td>
+          </tr>
+          <tr>
+            <td class="row-title">⏰ 准时出门不磨蹭</td>
+            <td class="target-cell">周一至五</td>
+            <td><div class="check-box"></div></td>
+            <td><div class="check-box"></div></td>
+            <td><div class="check-box"></div></td>
+            <td><div class="check-box"></div></td>
+            <td><div class="check-box"></div></td>
+            <td style="background:#f1f5f9; color:#94a3b8;">周末</td>
+            <td style="background:#f1f5f9; color:#94a3b8;">周末</td>
+            <td>___ 天 (得___分)</td>
+          </tr>
+          <tr>
+            <td class="row-title">🧹 家务劳动加分</td>
+            <td class="target-cell">自愿参与</td>
+            <td><span class="score-input">+___</span></td>
+            <td><span class="score-input">+___</span></td>
+            <td><span class="score-input">+___</span></td>
+            <td><span class="score-input">+___</span></td>
+            <td><span class="score-input">+___</span></td>
+            <td><span class="score-input">+___</span></td>
+            <td><span class="score-input">+___</span></td>
+            <td>共得 _____ 分</td>
+          </tr>
+          <tr style="background: #fefce8; font-weight: bold;">
+            <td colspan="2" style="text-align: right; padding-right: 8px; color: #854d0e;">当日积分合计：</td>
+            <td>____</td>
+            <td>____</td>
+            <td>____</td>
+            <td>____</td>
+            <td>____</td>
+            <td>____</td>
+            <td>____</td>
+            <td style="color: #d97706; font-size: 11px;">本周总得：____分</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Bottom Row: Rules & Signatures -->
+  <div class="footer-row">
+    <div class="rule-box">
+      <strong>💡 幸福约定与贴心小贴士：</strong><br>
+      1. <b>不拖延</b>：写完字帖、跳完绳请爸爸妈妈当场验收，当场打勾贴星！<br>
+      2. <b>重质量</b>：字写得端正漂亮比写得快更棒，争取圈出更多好看字拿火眼晶晶奖！<br>
+      3. <b>每周复盘</b>：周日晚7:30召开家庭小会议，结算积分、兑换愿望、规划下周。
+    </div>
+
+    <div class="sign-box">
+      <div class="sign-line">
+        <span>👧 努力的小主人：</span>
+        <div class="sign-underline"></div>
+      </div>
+      <div class="sign-line" style="margin-top: 5px;">
+        <span>👨‍👩‍👧 支持我的爸妈：</span>
+        <div class="sign-underline"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,4162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="妙绮的好习惯存折">
+  <meta name="theme-color" content="#7928ca">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="shortcut icon" href="favicon.ico">
+  <title>🌟 杨妙绮小公主的好习惯魔法存折</title>
+  <style>
+    :root {
+      --primary: #7928ca;
+      --primary-light: #9d4edd;
+      --primary-dark: #4a154b;
+      --pink: #ff6584;
+      --pink-soft: #fce7f3;
+      --gold: #ffb703;
+      --gold-dark: #fb8500;
+      --gold-light: #fff3bf;
+      --bg-gradient: linear-gradient(135deg, #fdf2f8 0%, #f3e8ff 50%, #e0f2fe 100%);
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --card-border: rgba(255, 255, 255, 0.85);
+      --card-shadow: 0 10px 25px -5px rgba(121, 40, 202, 0.12), 0 8px 10px -6px rgba(121, 40, 202, 0.08);
+      --text-main: #331832;
+      --text-sub: #6b7280;
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", "Microsoft YaHei", sans-serif;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      color: var(--text-main);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Ambient Sparkles Background */
+    .sparkle-canvas-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Overall Layout: Desktop Simulator + Sidebar */
+    .desktop-layout {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 20px 10px;
+      gap: 30px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Mobile Container Frame */
+    .mobile-frame {
+      width: 100%;
+      max-width: 440px;
+      min-height: calc(100vh - 40px);
+      background: transparent;
+      padding-bottom: 90px;
+      position: relative;
+      transition: all 0.3s;
+    }
+
+    @media (min-width: 860px) {
+      .mobile-frame {
+        background: rgba(255, 255, 255, 0.45);
+        border: 8px solid rgba(255, 255, 255, 0.85);
+        border-radius: 40px;
+        box-shadow: 0 25px 60px rgba(121, 40, 202, 0.22);
+        overflow: hidden;
+        min-height: 840px;
+        backdrop-filter: blur(20px);
+      }
+    }
+
+    /* Desktop Sidebar for Parents */
+    .desktop-sidebar {
+      display: none;
+      width: 320px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 28px;
+      padding: 24px;
+      box-shadow: var(--card-shadow);
+    }
+
+    @media (min-width: 860px) {
+      .desktop-sidebar {
+        display: block;
+      }
+    }
+
+    .sidebar-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(16px);
+      border-radius: 20px;
+      padding: 16px 18px;
+      border: 1.5px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 15px rgba(121, 40, 202, 0.08);
+      margin-top: 14px;
+    }
+
+    .sidebar-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sidebar-link-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      border: none;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.2s;
+    }
+
+    .sidebar-link-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* Header Profile Card */
+    .profile-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(253, 242, 248, 0.9) 100%);
+      border: 1.5px solid rgba(255, 255, 255, 0.9);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      margin-bottom: 14px;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-card::after {
+      content: '👑';
+      position: absolute;
+      right: -8px;
+      bottom: -12px;
+      font-size: 68px;
+      opacity: 0.08;
+      pointer-events: none;
+    }
+
+    .princess-avatar-box {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fbcfe8 0%, #ddd6fe 100%);
+      border: 2.5px solid #fff;
+      box-shadow: 0 4px 12px rgba(121, 40, 202, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .princess-avatar-box:active {
+      transform: scale(0.92);
+    }
+
+    .princess-avatar-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .princess-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .princess-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 2px;
+    }
+
+    .princess-name {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      letter-spacing: 0.5px;
+    }
+
+    .princess-switch-btn {
+      font-size: 11px;
+      padding: 3px 8px;
+      background: #f3e8ff;
+      color: var(--primary);
+      border: 1px solid #d8b4fe;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .princess-quote {
+      font-size: 12px;
+      color: var(--text-sub);
+      line-height: 1.4;
+      font-style: italic;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Score Grand Card */
+    .score-card {
+      background: linear-gradient(135deg, #7928ca 0%, #a855f7 60%, #ec4899 100%);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 20px 18px 16px 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 15px 35px -5px rgba(121, 40, 202, 0.38), 0 8px 12px -4px rgba(236, 72, 153, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .score-card::before {
+      content: '';
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, transparent 70%);
+      top: -60px;
+      right: -40px;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .score-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .score-label {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      opacity: 0.9;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sound-toggle-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      font-size: 13px;
+      padding: 4px 9px;
+      border-radius: 9999px;
+      cursor: pointer;
+      backdrop-filter: blur(5px);
+    }
+
+    .score-num-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .score-number {
+      font-size: 52px;
+      font-weight: 900;
+      line-height: 1;
+      text-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .score-unit {
+      font-size: 18px;
+      font-weight: 700;
+      opacity: 0.9;
+    }
+
+    .score-progress-wrap {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 9999px;
+      height: 12px;
+      overflow: hidden;
+      margin-bottom: 8px;
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ffb703 0%, #fb8500 50%, #ffe494 100%);
+      border-radius: 9999px;
+      transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 0 10px rgba(255, 183, 3, 0.8);
+    }
+
+    .score-progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11.5px;
+      font-weight: 600;
+      opacity: 0.95;
+    }
+
+    .firework-shortcut-btn {
+      margin-top: 10px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: white;
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      backdrop-filter: blur(10px);
+      transition: all 0.2s;
+    }
+
+    .firework-shortcut-btn:active {
+      transform: scale(0.97);
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    /* Quick Stats Bar */
+    .quick-stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .quick-stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 10px 8px;
+      text-align: center;
+      box-shadow: var(--card-shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .quick-stat-val {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 2px;
+    }
+
+    .quick-stat-lbl {
+      font-size: 10.5px;
+      color: var(--text-sub);
+      font-weight: 600;
+    }
+
+    /* Section Titles */
+    .section-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin: 14px 2px 10px 2px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      background: #fce7f3;
+      color: #be185d;
+    }
+
+    /* Task Card Styles */
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .task-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 18px;
+      padding: 14px 14px;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      backdrop-filter: blur(10px);
+    }
+
+    .task-card:active {
+      transform: scale(0.985);
+    }
+
+    .task-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .task-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .task-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .task-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 2px;
+    }
+
+    .task-badge-pts {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 6px;
+      background: #fef3c7;
+      color: #d97706;
+    }
+
+    .task-desc {
+      font-size: 11.5px;
+      color: var(--text-sub);
+      line-height: 1.35;
+    }
+
+    .task-btn-action {
+      background: linear-gradient(135deg, #7928ca 0%, #a855f7 100%);
+      color: white;
+      border: none;
+      padding: 9px 15px;
+      border-radius: 9999px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(121, 40, 202, 0.25);
+      transition: all 0.2s;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .task-btn-action:active {
+      transform: scale(0.93);
+    }
+
+    .bonus-btn {
+      background: linear-gradient(135deg, #ff6584 0%, #f43f5e 100%);
+      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.25);
+    }
+
+    .gold-btn {
+      background: linear-gradient(135deg, #ffb703 0%, #fb8500 100%);
+      color: #3b1b00;
+      box-shadow: 0 4px 12px rgba(251, 133, 0, 0.25);
+    }
+
+    /* Views Switching */
+    .view-panel {
+      display: none;
+    }
+
+    .view-panel.active {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.8);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 10px max(10px, env(safe-area-inset-bottom));
+      box-shadow: 0 -4px 20px rgba(121, 40, 202, 0.08);
+      z-index: 50;
+    }
+
+    @media (min-width: 860px) {
+      .bottom-nav {
+        position: absolute;
+        border-radius: 0 0 32px 32px;
+      }
+    }
+
+    .nav-tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-sub);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-size: 10.5px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 4px 12px;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+
+    .nav-tab-btn.active {
+      color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .nav-icon {
+      font-size: 20px;
+    }
+
+    /* Wish Mall Cards */
+    .mall-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .mall-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: var(--card-shadow);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .mall-card.grand-prize {
+      border: 2px solid #fde047;
+      background: linear-gradient(135deg, rgba(254, 240, 138, 0.4) 0%, rgba(255, 255, 255, 0.95) 100%);
+      box-shadow: 0 10px 25px rgba(234, 179, 8, 0.15);
+    }
+
+    .mall-grand-badge {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+      color: white;
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      box-shadow: 0 2px 6px rgba(202, 138, 4, 0.3);
+    }
+
+    .mall-card-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .mall-icon {
+      font-size: 26px;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      flex-shrink: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .mall-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .mall-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: #1f2937;
+      margin-bottom: 2px;
+    }
+
+    .mall-cost {
+      font-size: 13px;
+      font-weight: 800;
+      color: #d97706;
+    }
+
+    .mall-desc {
+      font-size: 12px;
+      color: var(--text-sub);
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+
+    .mall-action-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .mall-redeem-btn {
+      flex: 1;
+      background: linear-gradient(135deg, #7928ca 0%, #a855f7 100%);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(121, 40, 202, 0.25);
+      transition: all 0.2s;
+    }
+
+    .mall-redeem-btn:disabled {
+      background: #e5e7eb;
+      color: #9ca3af;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    .mall-delete-btn {
+      background: #fee2e2;
+      color: #dc2626;
+      border: 1px solid #fca5a5;
+      padding: 8px 12px;
+      border-radius: 9999px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    /* History and Undo Styles */
+    .history-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 14px 16px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 12px;
+      backdrop-filter: blur(10px);
+    }
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #f3f4f6;
+      gap: 8px;
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    .history-left {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .history-reason {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .history-time {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .history-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .history-pts {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .history-pts.plus { color: #10b981; }
+    .history-pts.minus { color: #ef4444; }
+
+    .history-revoke-btn {
+      font-size: 11px;
+      padding: 3px 8px;
+      background: #fdf2f8;
+      color: #be185d;
+      border: 1px solid #fbcfe8;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+
+    .history-revoke-btn:active {
+      transform: scale(0.92);
+    }
+
+    /* History Filter Bar & Pagination */
+    .history-filter-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .history-filter-pill {
+      background: rgba(255, 255, 255, 0.75);
+      border: 1px solid #e9d5ff;
+      color: #6b7280;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .history-filter-pill.active {
+      background: linear-gradient(135deg, #7928ca 0%, #a855f7 100%);
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 2px 8px rgba(121, 40, 202, 0.25);
+    }
+
+    .history-pagination-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 12px;
+      margin-top: 8px;
+      border-top: 1px dashed #f3e8ff;
+      font-size: 12px;
+    }
+
+    .page-nav-btn {
+      background: #fdf2f8;
+      border: 1px solid #fbcfe8;
+      color: #be185d;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .page-nav-btn:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+
+    .page-nav-btn:disabled {
+      background: #f3f4f6;
+      border-color: #e5e7eb;
+      color: #9ca3af;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .page-info-text {
+      font-weight: 800;
+      color: var(--primary);
+      font-size: 12px;
+    }
+
+    /* Floating Undo Toast */
+    .floating-undo-toast {
+      position: fixed;
+      bottom: 74px;
+      left: 14px;
+      right: 14px;
+      max-width: 412px;
+      margin: 0 auto;
+      background: rgba(30, 27, 46, 0.92);
+      backdrop-filter: blur(15px);
+      color: white;
+      border-radius: 16px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(15px);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .floating-undo-toast.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .floating-undo-text {
+      font-size: 12.5px;
+      font-weight: 600;
+      flex: 1;
+      padding-right: 8px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .floating-undo-btn {
+      background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+      color: white;
+      border: none;
+      font-size: 11.5px;
+      font-weight: 800;
+      padding: 5px 10px;
+      border-radius: 9999px;
+      cursor: pointer;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(219, 39, 119, 0.4);
+    }
+
+    /* Mall Recent Undo Card */
+    .mall-undo-card {
+      background: linear-gradient(135deg, rgba(253, 242, 248, 0.9) 0%, rgba(255, 255, 255, 0.95) 100%);
+      border: 1.5px solid #fbcfe8;
+      border-radius: 18px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 15px rgba(219, 39, 119, 0.08);
+    }
+
+    .mall-undo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .mall-undo-title {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #be185d;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .mall-undo-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: white;
+      border: 1px solid #fce7f3;
+      border-radius: 12px;
+      padding: 8px 10px;
+      margin-top: 6px;
+    }
+
+    .mall-undo-info {
+      flex: 1;
+      min-width: 0;
+      padding-right: 6px;
+    }
+
+    .mall-undo-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: #1f2937;
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .mall-undo-meta {
+      font-size: 10.5px;
+      color: #9ca3af;
+    }
+
+    .mall-undo-btn {
+      background: #fce7f3;
+      color: #be185d;
+      border: 1px solid #f472b6;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    /* Parent Undo Items */
+    .parent-undo-quick-card {
+      background: #fff;
+      border: 1.5px solid #f472b6;
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(244, 114, 182, 0.15);
+      margin-bottom: 10px;
+    }
+
+    .parent-undo-quick-text {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #1f2937;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .parent-undo-quick-btn {
+      background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(219, 39, 119, 0.35);
+      flex-shrink: 0;
+    }
+
+    .parent-undo-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid #f3f4f6;
+      border-radius: 12px;
+      margin-bottom: 6px;
+    }
+
+    /* Modal Overlays and Dialogs */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(10px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: rgba(255, 255, 255, 0.98);
+      border: 1.5px solid rgba(255, 255, 255, 0.9);
+      border-radius: 28px;
+      padding: 22px 20px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      transform: scale(0.92);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      max-height: 88vh;
+      overflow-y: auto;
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: scale(1);
+    }
+
+    .modal-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      text-align: center;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    /* Princess Picker Grid */
+    .princess-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .princess-opt {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      padding: 8px 4px;
+      border-radius: 16px;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .princess-opt.selected {
+      border-color: var(--primary);
+      background: #f3e8ff;
+    }
+
+    .princess-opt-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #fce7f3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      overflow: hidden;
+      border: 2px solid white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .princess-opt-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .princess-opt-name {
+      font-size: 11px;
+      font-weight: 700;
+      color: #374151;
+    }
+
+    /* Custom Score Modal UI (加减分/名目选择) */
+    .custom-mode-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 16px;
+      background: #f3f4f6;
+      padding: 4px;
+      border-radius: 16px;
+    }
+
+    .custom-mode-tab {
+      border: none;
+      padding: 9px 8px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      background: transparent;
+      color: #6b7280;
+      transition: all 0.2s;
+    }
+
+    .custom-mode-tab.active-add {
+      background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(236, 72, 153, 0.25);
+    }
+
+    .custom-mode-tab.active-deduct {
+      background: linear-gradient(135deg, #f97316 0%, #ef4444 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+    }
+
+    .chip-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #4b5563;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .quick-chips-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .quick-chip {
+      padding: 6px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1.5px solid #e5e7eb;
+      background: white;
+      color: #374151;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .quick-chip.selected {
+      background: #fce7f3;
+      border-color: #ec4899;
+      color: #db2777;
+      font-weight: 800;
+    }
+
+    .tag-cloud-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+      max-height: 120px;
+      overflow-y: auto;
+      padding: 4px;
+      background: #faf5ff;
+      border: 1px dashed #d8b4fe;
+      border-radius: 14px;
+    }
+
+    .reason-tag-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: white;
+      border: 1px solid #e9d5ff;
+      color: #6b21a8;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 4px 9px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .reason-tag-pill:hover, .reason-tag-pill:active {
+      background: #f3e8ff;
+      border-color: #a855f7;
+    }
+
+    .reason-tag-del {
+      color: #9ca3af;
+      font-size: 12px;
+      margin-left: 2px;
+      cursor: pointer;
+    }
+
+    .reason-tag-del:hover {
+      color: #ef4444;
+    }
+
+    .parent-input {
+      width: 100%;
+      border: 1.5px solid #e5e7eb;
+      background: #f9fafb;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 14px;
+      color: #111827;
+      outline: none;
+      margin-bottom: 14px;
+      transition: all 0.2s;
+    }
+
+    .parent-input:focus {
+      border-color: var(--primary);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(121, 40, 202, 0.12);
+    }
+
+    .btn-solid {
+      width: 100%;
+      background: linear-gradient(135deg, #7928ca 0%, #a855f7 100%);
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 9999px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(121, 40, 202, 0.3);
+      transition: all 0.2s;
+    }
+
+    .btn-solid:active {
+      transform: scale(0.97);
+    }
+
+    .btn-outline {
+      width: 100%;
+      background: transparent;
+      color: var(--primary);
+      border: 1.5px solid #d8b4fe;
+      padding: 10px 16px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    /* Princess Custom Alert / Confirm / Prompt Modal */
+    .princess-dialog-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 10, 30, 0.65);
+      backdrop-filter: blur(12px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .princess-dialog-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .princess-dialog-card {
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(253, 242, 248, 0.95) 100%);
+      border: 2px solid rgba(255, 255, 255, 0.9);
+      border-radius: 28px;
+      width: 100%;
+      max-width: 360px;
+      padding: 24px 20px 18px 20px;
+      box-shadow: 0 25px 60px rgba(121, 40, 202, 0.35);
+      text-align: center;
+      transform: scale(0.88);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+
+    .princess-dialog-overlay.active .princess-dialog-card {
+      transform: scale(1);
+    }
+
+    .princess-dialog-badge {
+      width: 62px;
+      height: 62px;
+      background: linear-gradient(135deg, #fbcfe8 0%, #ddd6fe 100%);
+      border: 3px solid #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      box-shadow: 0 6px 16px rgba(121, 40, 202, 0.22);
+      margin: -48px auto 12px auto;
+    }
+
+    .princess-dialog-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #331832;
+      margin-bottom: 8px;
+    }
+
+    .princess-dialog-body {
+      font-size: 13.5px;
+      color: #4b5563;
+      line-height: 1.55;
+      margin-bottom: 16px;
+      white-space: pre-wrap;
+      text-align: left;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid #fce7f3;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .princess-dialog-input {
+      width: 100%;
+      border: 1.5px solid #d8b4fe;
+      background: white;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 6px rgba(121, 40, 202, 0.08);
+    }
+
+    .princess-dialog-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .princess-dialog-btn {
+      flex: 1;
+      padding: 11px 16px;
+      border-radius: 9999px;
+      font-size: 13.5px;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .princess-dialog-btn.cancel {
+      background: #f3f4f6;
+      color: #4b5563;
+    }
+
+    .princess-dialog-btn.primary {
+      background: linear-gradient(135deg, #7928ca 0%, #ec4899 100%);
+      color: white;
+      box-shadow: 0 4px 14px rgba(121, 40, 202, 0.35);
+    }
+
+    .princess-dialog-btn.danger {
+      background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+      color: white;
+      box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35);
+    }
+
+    /* Fullscreen Fireworks Engine */
+    .fireworks-view-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at center, #1b0c36 0%, #090317 100%);
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .fireworks-view-container.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .fireworks-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .fireworks-header-bar {
+      position: absolute;
+      top: max(16px, env(safe-area-inset-top));
+      left: 16px;
+      right: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 10;
+    }
+
+    .fw-close-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+    }
+
+    .fw-banner-quote {
+      position: absolute;
+      bottom: max(80px, calc(env(safe-area-inset-bottom) + 80px));
+      left: 20px;
+      right: 20px;
+      text-align: center;
+      color: #fde047;
+      font-size: 14px;
+      font-weight: 800;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+    }
+
+    .fireworks-bottom-controls {
+      position: absolute;
+      bottom: max(20px, env(safe-area-inset-bottom));
+      left: 16px;
+      right: 16px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .fw-ctrl-btn {
+      background: rgba(255, 255, 255, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: 9999px;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+    }
+
+    .fw-ctrl-btn.special-burst {
+      background: linear-gradient(135deg, #ec4899 0%, #eab308 100%);
+      border: none;
+      box-shadow: 0 0 15px rgba(236, 72, 153, 0.6);
+    }
+
+    /* Floating Points Effect */
+    .floating-pts {
+      position: fixed;
+      font-size: 26px;
+      font-weight: 900;
+      color: #10b981;
+      text-shadow: 0 2px 10px rgba(16, 185, 129, 0.4);
+      pointer-events: none;
+      z-index: 999;
+      animation: floatUp 1.2s forwards cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+
+    @keyframes floatUp {
+      0% { opacity: 0; transform: translate(-50%, 0) scale(0.6); }
+      20% { opacity: 1; transform: translate(-50%, -20px) scale(1.15); }
+      100% { opacity: 0; transform: translate(-50%, -90px) scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Stars Canvas -->
+  <canvas id="ambientCanvas" class="sparkle-canvas-bg"></canvas>
+
+  <!-- Background Music Audio for Fireworks (快乐无边 MP3 纯享版) -->
+  <audio id="fireworksAudio" src="fireworks_bgm.mp3" preload="auto"></audio>
+
+  <div class="desktop-layout">
+
+    <!-- Mobile Frame Simulator -->
+    <div class="mobile-frame">
+
+      <!-- Princess Header Profile Card -->
+      <div class="profile-card">
+        <div class="princess-avatar-box" id="princessAvatarBox" onclick="openPrincessPicker()">
+          <img id="princessAvatarImg" src="avatars/elsa_avatar.png" alt="Princess" />
+          <span id="princessAvatarEmoji" style="display:none;">👑</span>
+        </div>
+        <div class="princess-info">
+          <div class="princess-header-row">
+            <span class="princess-name" id="princessDisplayName">妙绮·艾莎小公主</span>
+            <button class="princess-switch-btn" onclick="openPrincessPicker()">切换公主 👑</button>
+          </div>
+          <div class="princess-quote" id="princessQuoteText">“心怀勇气与专注，释放你的冰雪奇迹！”</div>
+        </div>
+      </div>
+
+      <!-- Score Grand Card -->
+      <div class="score-card">
+        <div class="score-title-row">
+          <span class="score-label">✨ 当前魔法能量星</span>
+          <button class="sound-toggle-btn" id="soundToggleBtn" onclick="toggleSound()">🔔 声音: 开</button>
+        </div>
+        <div class="score-num-row">
+          <span class="score-number" id="currentScoreDisplay">0</span>
+          <span class="score-unit">积分</span>
+        </div>
+        <div class="score-progress-wrap">
+          <div class="progress-bar-fill" id="goalProgressBar"></div>
+        </div>
+        <div class="score-progress-labels">
+          <span id="progressPercentText">0 / 500 分 (0%)</span>
+          <span id="remainingPtsText">✨ 还需 500 积分即可去迪士尼看真烟花！</span>
+        </div>
+        <button class="firework-shortcut-btn" onclick="openFireworksView()">
+          🎆 开启迪士尼城堡真烟花秀（快乐无边音乐） ✨
+        </button>
+      </div>
+
+      <!-- Quick Stats Row -->
+      <div class="quick-stats-row">
+        <div class="quick-stat-card">
+          <div class="quick-stat-val" id="todayEarnedDisplay">+0</div>
+          <div class="quick-stat-lbl">今日收获</div>
+        </div>
+        <div class="quick-stat-card" style="cursor:pointer;" onclick="openWeeklyRewardModal()" title="点击查看周全勤达成进度">
+          <div class="quick-stat-val" id="weekWritingCount">0 / 4 张</div>
+          <div class="quick-stat-lbl">本周练字 🏅</div>
+        </div>
+        <div class="quick-stat-card" style="cursor:pointer;" onclick="openWeeklyRewardModal()" title="点击查看周全勤达成进度">
+          <div class="quick-stat-val" id="weekJumpCount">0 / 4 次</div>
+          <div class="quick-stat-lbl">本周跳绳 🏅</div>
+        </div>
+      </div>
+
+      <!-- VIEWS CONTAINER -->
+      <div id="viewsWrapper">
+
+        <!-- TAB 1: 每日打卡 -->
+        <main id="viewTasks" class="view-panel active">
+          <div class="section-title">
+            <span>✨ 今日好习惯打卡</span>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <span class="badge" style="background:#f3e8ff; color:#7928ca; cursor:pointer;" onclick="openRulesModal()">📖 守则</span>
+              <span class="badge" id="todayDateBadge">周四</span>
+            </div>
+          </div>
+
+          <div class="task-list">
+            <!-- Task 1: Writing -->
+            <div class="task-card">
+              <div class="task-left">
+                <div class="task-icon-box" style="background:#fef3c7; color:#d97706;">✍️</div>
+                <div class="task-text">
+                  <div class="task-name">
+                    <span>规范练字 1 张</span>
+                    <span class="task-badge-pts">+40分</span>
+                  </div>
+                  <div class="task-desc">写完A4字帖1张，握笔端正、不涂改</div>
+                </div>
+              </div>
+              <button class="task-btn-action" onclick="earnPoints(40, '✍️ 完成1张规范字帖', true)">打卡完成</button>
+            </div>
+
+            <!-- Task 2: Writing Star (火眼晶晶) -->
+            <div class="task-card">
+              <div class="task-left">
+                <div class="task-icon-box" style="background:#fee2e2; color:#ef4444;">🔍</div>
+                <div class="task-text">
+                  <div class="task-name">
+                    <span>火眼晶晶奖</span>
+                    <span class="task-badge-pts" style="background:#fee2e2; color:#b91c1c;">每3个字 +5分</span>
+                  </div>
+                  <div class="task-desc">爸妈红笔圈出好看字，每 3 个好看字就得 5 分</div>
+                </div>
+              </div>
+              <button class="task-btn-action bonus-btn" onclick="openFireEyesPicker()">火眼晶晶</button>
+            </div>
+
+            <!-- Task 3: Jump Rope -->
+            <div class="task-card">
+              <div class="task-left">
+                <div class="task-icon-box" style="background:#dcfce7; color:#15803d;">🪢</div>
+                <div class="task-text">
+                  <div class="task-name">
+                    <span>阳光跳绳 500 个</span>
+                    <span class="task-badge-pts" style="background:#dcfce7; color:#15803d;">+25分</span>
+                  </div>
+                  <div class="task-desc">跳满500个（可分2~3组跳完，计总数）</div>
+                </div>
+              </div>
+              <button class="task-btn-action" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="earnPoints(25, '🪢 跳绳达标500个', true)">跳满打卡</button>
+            </div>
+
+            <!-- Task 4: Morning Punctual -->
+            <div class="task-card">
+              <div class="task-left">
+                <div class="task-icon-box" style="background:#e0e7ff; color:#4338ca;">⏰</div>
+                <div class="task-text">
+                  <div class="task-name">
+                    <span>晨间准时出发</span>
+                    <span class="task-badge-pts" style="background:#e0e7ff; color:#4338ca;">+10分</span>
+                  </div>
+                  <div class="task-desc">约定时点前穿戴整齐、出门不磨蹭哭闹</div>
+                </div>
+              </div>
+              <button class="task-btn-action" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);" onclick="earnPoints(10, '⏰ 晨间准时出发小标兵')">准时打卡</button>
+            </div>
+
+            <!-- Task 5: Tardiness Deduction (扣20分) -->
+            <div class="task-card" style="border: 1.5px solid #fed7aa; background: linear-gradient(135deg, rgba(255, 237, 213, 0.45) 0%, rgba(255, 255, 255, 0.95) 100%);">
+              <div class="task-left">
+                <div class="task-icon-box" style="background:#ffedd5; color:#ea580c;">🐢</div>
+                <div class="task-text">
+                  <div class="task-name">
+                    <span>迟到 / 早上严重拖拉</span>
+                    <span class="task-badge-pts" style="background:#fee2e2; color:#b91c1c;">-20分</span>
+                  </div>
+                  <div class="task-desc">提醒1次后仍极度磨蹭导致迟到（就事论事）</div>
+                </div>
+              </div>
+              <button class="task-btn-action" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); box-shadow: 0 4px 10px rgba(234, 88, 12, 0.25);" onclick="deductMorningPoints()">扣除20分</button>
+            </div>
+
+            <!-- Task 6: Housework -->
+            <div class="task-card">
+              <div class="task-left">
+                <div class="task-icon-box" style="background:#fce7f3; color:#be185d;">🧹</div>
+                <div class="task-text">
+                  <div class="task-name">
+                    <span>白雪家务小帮手</span>
+                    <span class="task-badge-pts" style="background:#fce7f3; color:#be185d;">+10~20分</span>
+                  </div>
+                  <div class="task-desc">扔垃圾(+10) / 叠衣服(+10) / 洗碗收拾(+20)</div>
+                </div>
+              </div>
+              <button class="task-btn-action" style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);" onclick="openHouseworkPicker()">做家务</button>
+            </div>
+
+            <!-- Custom Score Card (自定义加减分与名目快捷选择) -->
+            <div class="task-card" style="border: 1.5px solid #d8b4fe; background: linear-gradient(135deg, rgba(243, 232, 255, 0.6) 0%, rgba(255, 255, 255, 0.95) 100%);">
+              <div class="task-left">
+                <div class="task-icon-box" style="background:#f3e8ff; color:#7928ca;">🎨</div>
+                <div class="task-text">
+                  <div class="task-name">
+                    <span>魔法自由记分</span>
+                    <span class="task-badge-pts" style="background:#f3e8ff; color:#7928ca;">加/减分自由调</span>
+                  </div>
+                  <div class="task-desc">随手奖励特别加分或扣分提醒，名目自动沉淀记忆</div>
+                </div>
+              </div>
+              <button class="task-btn-action" style="background: linear-gradient(135deg, #7928ca 0%, #a855f7 100%);" onclick="openCustomScoreModal('add')">自由记分 ✨</button>
+            </div>
+
+          </div>
+        </main>
+
+        <!-- TAB 2: 心愿商城 -->
+        <main id="viewMall" class="view-panel">
+          <div class="section-title">
+            <span>🏰 奇妙仙子心愿商城</span>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <span class="badge" style="background:#fef3c7; color:#b45309;">10积分 = 1元</span>
+              <button class="badge" style="border:none; cursor:pointer; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:white; padding:4px 10px; border-radius:9999px;" onclick="openNewPrizeModal()">➕ 新增心愿</button>
+            </div>
+          </div>
+
+          <!-- 最近兑换撤回条 (防手滑误兑换) -->
+          <div id="mallRecentRedemptions"></div>
+
+          <!-- 动态心愿奖励网格 -->
+          <div class="mall-grid" id="mallGridContainer"></div>
+        </main>
+
+        <!-- TAB 3: 成长明细 -->
+        <main id="viewHistory" class="view-panel">
+          <div class="section-title">
+            <span>📜 魔法存折明细</span>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <span class="badge" id="historyCountBadge">共 0 条</span>
+              <button class="badge" style="border:none; cursor:pointer;" onclick="exportRecords()">导出记录</button>
+            </div>
+          </div>
+
+          <!-- 筛选分类条 (全部 / 奖励加分 / 兑换扣分) -->
+          <div class="history-filter-bar">
+            <button class="history-filter-pill active" onclick="setHistoryFilter('all', this)">全部明细</button>
+            <button class="history-filter-pill" onclick="setHistoryFilter('plus', this)">✨ 奖励加分</button>
+            <button class="history-filter-pill" onclick="setHistoryFilter('minus', this)">🎁 兑换/扣分</button>
+          </div>
+
+          <div class="history-card">
+            <div id="historyListContainer"></div>
+            <!-- 分页控制器 -->
+            <div id="historyPagination" class="history-pagination-wrap"></div>
+          </div>
+        </main>
+
+        <!-- TAB 4: 家长工具 -->
+        <main id="viewParent" class="view-panel">
+          <div class="section-title">
+            <span>⚙️ 家长魔法工具箱</span>
+            <span class="badge">管理与防误触</span>
+          </div>
+
+          <!-- 家长防误触与撤回中心 -->
+          <div class="history-card" style="margin-bottom:14px; border: 1.5px solid #fbcfe8; background: linear-gradient(135deg, rgba(253, 242, 248, 0.7) 0%, #fff 100%);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <h4 style="font-size:14px; margin:0; color:#db2777;">↩️ 家长撤回与防误触中心</h4>
+              <span class="badge" style="background:#fce7f3; color:#be185d;">点错即撤</span>
+            </div>
+            <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px; line-height:1.5;">
+              如果不小心手滑点错了打卡加分、惩罚扣分，或者误点了心愿兑换，可在此一键撤回，积分会自动原路退回/扣回。
+            </p>
+            <div id="parentUndoList"></div>
+          </div>
+
+          <!-- 自由记分快捷入口 -->
+          <div class="history-card" style="margin-bottom:14px;">
+            <h4 style="font-size:14px; margin-bottom:10px; color:var(--primary);">🎯 手动调整积分 (支持加分与减分)</h4>
+            <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px;">
+              点击下方按钮即可打开公主风自由记分弹窗，支持常用分值胶囊与历史名目记忆复用。
+            </p>
+            <div style="display:flex; gap:10px;">
+              <button class="btn-solid" style="flex:1;" onclick="openCustomScoreModal('add')">➕ 奖励加分</button>
+              <button class="btn-solid" style="flex:1; background:linear-gradient(135deg, #f97316 0%, #ea580c 100%); box-shadow:0 4px 15px rgba(234,88,12,0.3);" onclick="openCustomScoreModal('deduct')">➖ 扣分提醒</button>
+            </div>
+          </div>
+
+          <!-- 数据备份与重置 -->
+          <div class="history-card">
+            <h4 style="font-size:14px; margin-bottom:10px; color:var(--primary);">📦 数据备份与重置</h4>
+            <p style="font-size:12px; color:var(--text-sub); margin-bottom:12px;">
+              数据已永久实时同步保存在 Mac 电脑硬盘的 data.json 中。
+            </p>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <button class="btn-outline" onclick="exportDataJson()">💾 导出备份数据 (JSON)</button>
+              <button class="btn-outline" onclick="importDataJson()">📥 导入恢复数据</button>
+              <button class="btn-outline" style="color:#ef4444; border-color:#fca5a5;" onclick="resetWeekData()">🔄 开启新的一周（清空周打卡计次，积分保留）</button>
+            </div>
+          </div>
+        </main>
+
+      </div>
+
+      <!-- Bottom Navigation Bar -->
+      <nav class="bottom-nav">
+        <button class="nav-tab-btn active" onclick="switchTab('viewTasks', this)">
+          <span class="nav-icon">✨</span>
+          <span>每日打卡</span>
+        </button>
+        <button class="nav-tab-btn" onclick="switchTab('viewMall', this)">
+          <span class="nav-icon">🏰</span>
+          <span>心愿商城</span>
+        </button>
+        <button class="nav-tab-btn" onclick="switchTab('viewHistory', this)">
+          <span class="nav-icon">📜</span>
+          <span>成长明细</span>
+        </button>
+        <button class="nav-tab-btn" onclick="switchTab('viewParent', this)">
+          <span class="nav-icon">⚙️</span>
+          <span>家长工具</span>
+        </button>
+      </nav>
+
+      <!-- Floating Undo Toast (操作后即时撤回通知条) -->
+      <div id="floatingUndoToast" class="floating-undo-toast">
+        <span class="floating-undo-text" id="floatingUndoText">已成功记录</span>
+        <button class="floating-undo-btn" onclick="undoLastAction()">↩️ 点错了？撤回</button>
+      </div>
+
+    </div>
+
+    <!-- Desktop Sidebar for Parents -->
+    <aside class="desktop-sidebar">
+      <!-- 手机扫码卡片 -->
+      <div class="sidebar-card" style="margin-top:0;">
+        <div style="text-align:center; margin-bottom:12px;">
+          <div style="font-size:32px; margin-bottom:4px;">📱</div>
+          <h3 style="font-size:15px; font-weight:800; color:var(--primary-dark);">手机同屏扫码访问</h3>
+          <p style="font-size:11.5px; color:var(--text-sub); margin-top:2px;">手机连接同一 Wi-Fi，随时随地打卡</p>
+        </div>
+        <div style="display:flex; justify-content:center; margin-bottom:12px;">
+          <img id="desktopQrCodeImg" style="width:160px; height:160px; border-radius:14px; border:2px solid #e9d5ff; padding:5px; background:white;" src="" alt="手机扫码" />
+        </div>
+        <div style="font-size:11px; color:#6b7280; text-align:center; word-break:break-all; margin-bottom:12px; background:#f3f4f6; padding:6px 8px; border-radius:8px;" id="desktopQrUrlText">
+          http://localhost:8080/
+        </div>
+        <button class="btn-solid" style="font-size:12px; padding:9px 12px;" onclick="copyCurrentUrl()">📋 复制手机访问链接</button>
+      </div>
+
+      <!-- 给妙绮的魔法守则 -->
+      <div class="sidebar-card">
+        <div class="sidebar-title">
+          <span>👑</span>
+          <span>给妙绮的魔法守则</span>
+        </div>
+        <p style="font-size:12px; color:var(--text-sub); line-height:1.5; margin-bottom:10px;">
+          专门写给6岁妙绮小公主的童话规则说明，生动讲清写字、跳绳与迪士尼心愿！
+        </p>
+        <button class="sidebar-link-btn" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="openRulesModal()">
+          📖 查看魔法守则弹窗
+        </button>
+        <a class="sidebar-link-btn" style="background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);" href="妙绮小公主的魔法成长守则.pdf" target="_blank">
+          🖨️ 打印守则海报单页 (PDF)
+        </a>
+        <a class="sidebar-link-btn" style="background:linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);" href="杨妙绮_好习惯成长存折.pdf" target="_blank">
+          📄 打印周打卡存折 (PDF)
+        </a>
+      </div>
+
+      <!-- 保存到手机主屏幕 -->
+      <div class="sidebar-card">
+        <div class="sidebar-title">
+          <span>💡</span>
+          <span>保存到手机主屏幕</span>
+        </div>
+        <div style="font-size:12px; color:#4b5563; line-height:1.6;">
+          <p style="margin-bottom:8px;">
+            <strong>🍎 苹果 iPhone (Safari)：</strong><br>
+            点击底部【分享图标 ⬆️】➜ 往下拉点击【添加到主屏幕】。
+          </p>
+          <p>
+            <strong>🤖 安卓手机 (微信/Chrome)：</strong><br>
+            点击右上角【三个点 ⋯】➜ 点击【添加到桌面】。<br>
+            <span style="font-size:11px; color:#9ca3af; font-style:italic;">即可像真正 App 一样全屏沉浸使用！</span>
+          </p>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- MODAL 1: Princess Avatar Picker -->
+  <div class="modal-overlay" id="princessModal" onclick="closeModals(event)">
+    <div class="modal-card">
+      <div class="modal-title">👑 选择今日心仪迪士尼公主</div>
+      <div class="princess-grid" id="princessPickerGrid"></div>
+      <button class="btn-solid" onclick="closePrincessPicker()">确定选择</button>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Housework Picker -->
+  <div class="modal-overlay" id="houseworkModal" onclick="closeModals(event)">
+    <div class="modal-card">
+      <div class="modal-title">🧹 白雪小帮手·家务清单</div>
+      <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+        <button class="btn-outline" style="text-align:left; padding:12px 14px;" onclick="earnHousework(10, '🧹 家务：主动扔垃圾/套垃圾袋')">
+          <strong style="color:var(--text-main);">🗑️ 主动扔垃圾 / 套垃圾袋</strong>
+          <span style="float:right; font-weight:800; color:#10b981;">+10分</span>
+        </button>
+        <button class="btn-outline" style="text-align:left; padding:12px 14px;" onclick="earnHousework(10, '🧹 家务：独立整理收拾衣服')">
+          <strong style="color:var(--text-main);">👗 独立整理收拾衣服/叠被子</strong>
+          <span style="float:right; font-weight:800; color:#10b981;">+10分</span>
+        </button>
+        <button class="btn-outline" style="text-align:left; padding:12px 14px;" onclick="earnHousework(20, '🧹 家务：帮爸妈收拾餐桌洗碗')">
+          <strong style="color:var(--text-main);">🍽️ 饭后收拾餐桌 / 协助洗碗</strong>
+          <span style="float:right; font-weight:800; color:#10b981;">+20分</span>
+        </button>
+      </div>
+      <button class="btn-solid" onclick="closeHouseworkPicker()">关闭</button>
+    </div>
+  </div>
+
+  <!-- MODAL: Fire Eyes Picker (火眼晶晶好看字记分) -->
+  <div class="modal-overlay" id="fireEyesModal" onclick="closeModals(event)">
+    <div class="modal-card">
+      <div class="modal-title">🔍 火眼晶晶·好看字奖励</div>
+      <div style="font-size:12px; color:#6b7280; margin-bottom:12px; text-align:center;">
+        爸爸妈妈用红笔圈出好看的字，<strong>每 3 个好看的字就得 5 分</strong>！
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+        <button class="btn-outline" style="text-align:left; padding:12px 14px;" onclick="earnFireEyes(3)">
+          <strong style="color:var(--text-main);">✨ 圈出 3 个好看的字</strong>
+          <span style="float:right; font-weight:800; color:#ef4444;">+5 分</span>
+        </button>
+        <button class="btn-outline" style="text-align:left; padding:12px 14px;" onclick="earnFireEyes(6)">
+          <strong style="color:var(--text-main);">🌟 圈出 6 个好看的字</strong>
+          <span style="float:right; font-weight:800; color:#ef4444;">+10 分</span>
+        </button>
+        <button class="btn-outline" style="text-align:left; padding:12px 14px;" onclick="earnFireEyes(9)">
+          <strong style="color:var(--text-main);">💫 圈出 9 个好看的字</strong>
+          <span style="float:right; font-weight:800; color:#ef4444;">+15 分</span>
+        </button>
+        <button class="btn-outline" style="text-align:left; padding:12px 14px;" onclick="earnFireEyes(12)">
+          <strong style="color:var(--text-main);">👑 圈出 12 个好看的字</strong>
+          <span style="float:right; font-weight:800; color:#ef4444;">+20 分</span>
+        </button>
+        <button class="btn-outline" style="text-align:left; padding:12px 14px; border:1px dashed #d8b4fe;" onclick="earnCustomFireEyes()">
+          <strong style="color:#7928ca;">✏️ 圈出了其他数量（自定义字数）</strong>
+          <span style="float:right; font-weight:800; color:#7928ca;">每 3 字算 5 分</span>
+        </button>
+      </div>
+      <button class="btn-solid" onclick="closeFireEyesPicker()">关闭</button>
+    </div>
+  </div>
+
+  <!-- MODAL 3: Weekly Streaks Modal -->
+  <div class="modal-overlay" id="weeklyModal" onclick="closeModals(event)">
+    <div class="modal-card">
+      <div class="modal-title">🏅 周全勤大礼包（自动达成）</div>
+      <div id="weeklyModalBody" style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+        <!-- 动态渲染全勤进度与达成状态 -->
+      </div>
+      <button class="btn-solid" onclick="closeWeeklyModal()">关闭</button>
+    </div>
+  </div>
+
+  <!-- MODAL 4: Rules Modal -->
+  <div class="modal-overlay" id="rulesModal" onclick="closeModals(event)">
+    <div class="modal-card">
+      <div class="modal-title">📖 妙绮小公主魔法守则</div>
+      <div style="font-size:12.5px; color:#4b5563; line-height:1.6; margin-bottom:16px; max-height:300px; overflow-y:auto; padding-right:4px;">
+        <p><strong>1. 👑 终极目标：</strong> 积满 500 魔法星，畅玩迪士尼乐园并看城堡真烟花秀！</p>
+        <p style="margin-top:8px;"><strong>2. ✍️ 规范书写：</strong> 每张A4字帖 +40分，握笔端正、不涂改。被爸妈红笔圈出好看字，享【火眼晶晶奖】每 3 个好看字就得 5 分（多写多得）。</p>
+        <p style="margin-top:8px;"><strong>3. 🪢 阳光跳绳：</strong> 每日跳满 500 个 +25分（可分2~3组跳完）。</p>
+        <p style="margin-top:8px;"><strong>4. ⏰ 守时约定：</strong> 晨间准时出发 +10分；若提醒1次后仍严重拖拉磨蹭，扣除 20分（就事论事，明天早起动作快马上能赢回）。</p>
+        <p style="margin-top:8px;"><strong>5. 💰 零用钱兑换：</strong> 10 积分兑换 1 元真实零花钱，存入透明小存钱罐，自主培养财商！</p>
+      </div>
+      <button class="btn-solid" onclick="closeRulesModal()">我已熟记魔法守则 ✨</button>
+    </div>
+  </div>
+
+  <!-- MODAL 5: Custom Score Modal (重构：加减分切换、分值胶囊、名目快捷选择与记忆) -->
+  <div class="modal-overlay" id="customScoreModal" onclick="closeModals(event)">
+    <div class="modal-card">
+      <div class="modal-title" id="customModalTitle">🎨 魔法自由记分</div>
+
+      <!-- 加分 / 扣分 模式切换 -->
+      <div class="custom-mode-tabs">
+        <button class="custom-mode-tab active-add" id="modeTabAdd" onclick="switchCustomModalMode('add')">➕ 奖励加分</button>
+        <button class="custom-mode-tab" id="modeTabDeduct" onclick="switchCustomModalMode('deduct')">➖ 扣分提醒</button>
+      </div>
+
+      <!-- 分值快捷胶囊 -->
+      <div class="chip-label">
+        <span>快捷分值</span>
+        <span style="font-size:11px; color:#9ca3af;">点击快速填入</span>
+      </div>
+      <div class="quick-chips-wrap" id="customQuickScoreChips">
+        <!-- 动态渲染分值胶囊 -->
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label style="font-size:12px; font-weight:700; color:#4b5563; display:block; margin-bottom:4px;">分值数值</label>
+        <input type="number" id="customModalScoreInput" class="parent-input" placeholder="输入分值 (如: 10, 15, 20)" style="margin-bottom:0;" />
+      </div>
+
+      <!-- 名目快捷标签沉淀 (点击填入，支持点叉删除) -->
+      <div class="chip-label" style="margin-top:10px;">
+        <span>常用名目（自动记忆）</span>
+        <span style="font-size:11px; color:#9ca3af;">点击填入 / 点×删除</span>
+      </div>
+      <div class="tag-cloud-wrap" id="customModalReasonTags">
+        <!-- 动态渲染历史常用名目 -->
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <label style="font-size:12px; font-weight:700; color:#4b5563; display:block; margin-bottom:4px;">打卡名目 / 调整事由</label>
+        <input type="text" id="customModalReasonInput" class="parent-input" placeholder="输入或点击上方选择名目..." style="margin-bottom:0;" />
+      </div>
+
+      <div style="display:flex; gap:10px;">
+        <button class="btn-outline" style="flex:1;" onclick="closeCustomScoreModal()">取消</button>
+        <button class="btn-solid" style="flex:1;" onclick="confirmCustomScoreModal()">✨ 确认录入</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 6: Add New Wish Modal (新增心愿奖励) -->
+  <div class="modal-overlay" id="newPrizeModal" onclick="closeModals(event)">
+    <div class="modal-card">
+      <div class="modal-title">➕ 新增心愿奖励</div>
+      <div style="margin-bottom:12px;">
+        <label style="font-size:12px; font-weight:700; color:#4b5563; display:block; margin-bottom:4px;">心愿名称</label>
+        <input type="text" id="newPrizeName" class="parent-input" placeholder="例如：去游乐场玩一次" style="margin-bottom:0;" />
+      </div>
+      <div style="margin-bottom:12px;">
+        <label style="font-size:12px; font-weight:700; color:#4b5563; display:block; margin-bottom:4px;">所需积分</label>
+        <input type="number" id="newPrizeCost" class="parent-input" placeholder="例如：100" style="margin-bottom:0;" />
+      </div>
+      <div style="margin-bottom:12px;">
+        <label style="font-size:12px; font-weight:700; color:#4b5563; display:block; margin-bottom:4px;">心愿图标 (Emoji)</label>
+        <input type="text" id="newPrizeIcon" class="parent-input" placeholder="例如：🎡 或 🎨 或 🍦" style="margin-bottom:0;" />
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="font-size:12px; font-weight:700; color:#4b5563; display:block; margin-bottom:4px;">心愿描述</label>
+        <input type="text" id="newPrizeDesc" class="parent-input" placeholder="例如：周末和爸妈一起去室内游乐场畅玩半天" style="margin-bottom:0;" />
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button class="btn-outline" style="flex:1;" onclick="closeNewPrizeModal()">取消</button>
+        <button class="btn-solid" style="flex:1;" onclick="confirmNewPrize()">✨ 确认添加</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 7: Princess Custom Alert / Confirm / Prompt Dialog (全局禁用原生系统弹窗) -->
+  <div class="princess-dialog-overlay" id="princessDialogModal">
+    <div class="princess-dialog-card">
+      <div class="princess-dialog-badge" id="princessDialogBadge">👑</div>
+      <div class="princess-dialog-title" id="princessDialogTitle">魔法提示</div>
+      <div class="princess-dialog-body" id="princessDialogBody">提示内容</div>
+      <input type="text" class="princess-dialog-input" id="princessDialogInput" style="display:none;" />
+      <div class="princess-dialog-actions" id="princessDialogActions">
+        <button class="princess-dialog-btn cancel" id="princessDialogBtnCancel">取消</button>
+        <button class="princess-dialog-btn primary" id="princessDialogBtnConfirm">好的 ✨</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 8: Fullscreen Disney Castle Fireworks View -->
+  <div class="fireworks-view-container" id="fireworksView">
+    <canvas id="fireworksCanvas" class="fireworks-canvas"></canvas>
+
+    <div class="fireworks-header-bar">
+      <span style="color:white; font-size:14px; font-weight:800; text-shadow:0 2px 6px rgba(0,0,0,0.8);">
+        🏰 迪士尼城堡烟花盛典·杨妙绮专属秀
+      </span>
+      <button class="fw-close-btn" onclick="closeFireworksView()">✕ 返回存折</button>
+    </div>
+
+    <div class="fw-banner-quote" id="fireworksBannerQuote">“用每一个自律的好习惯，点亮迪士尼城堡的夜空！”</div>
+
+    <div class="fireworks-bottom-controls">
+      <button class="fw-ctrl-btn" id="autoFwBtn" onclick="toggleAutoFireworks()">🎆 自动燃放: 开</button>
+      <button class="fw-ctrl-btn" onclick="launchHeartFirework()">💖 爱心烟花</button>
+      <button class="fw-ctrl-btn special-burst" onclick="triggerGrandFinale()">🎇 盛大谢幕烟花雨！</button>
+    </div>
+  </div>
+
+  <script>
+    /* ==========================================================
+       1. DATA STORAGE & STATE MANAGEMENT (杨妙绮好习惯存折)
+       ========================================================== */
+    const STORAGE_KEY = 'miaoqi_princess_habit_v1';
+
+    const PRINCESSES = [
+      { id: 'elsa', name: '艾莎', emoji: '❄️', avatar: 'avatars/elsa_avatar.png', quote: '“心怀勇气与专注，释放你的冰雪奇迹！”' },
+      { id: 'belle', name: '贝儿', emoji: '🌹', avatar: 'avatars/belle_avatar.png', quote: '“每一页字帖，都是通向智慧城堡的阶梯！”' },
+      { id: 'cinderella', name: '灰姑娘', emoji: '👠', avatar: 'avatars/cinderella_avatar.png', quote: '“守时与坚持，能让平凡时钟化作璀璨奇迹！”' },
+      { id: 'rapunzel', name: '乐佩', emoji: '☀️', avatar: 'avatars/rapunzel_avatar.png', quote: '“像金色发丝一样飞扬，充满活力与阳光！”' },
+      { id: 'ariel', name: '爱丽儿', emoji: '🧜‍♀️', avatar: 'avatars/ariel_avatar.png', quote: '“勇敢探索新世界，每一天都有神奇发现！”' },
+      { id: 'snowwhite', name: '白雪公主', emoji: '🍎', avatar: 'avatars/snowwhite_avatar.png', quote: '“勤劳与微笑，能让整个世界变得明亮！”' },
+      { id: 'jasmine', name: '茉莉', emoji: '🪔', avatar: 'avatars/jasmine_avatar.png', quote: '“自信与独立，乘坐飞毯勇敢追逐梦想！”' },
+      { id: 'aurora', name: '爱洛', emoji: '🌸', avatar: 'avatars/aurora_avatar.png', quote: '“甜美的梦境，由每一个自律的好习惯编织！”' }
+    ];
+
+    const FIREWORK_QUOTES = [
+      '“👑 妙绮小公主，用好习惯点亮每一座城堡！”',
+      '“✨ 只要心怀坚持，梦想就一定会实现！”',
+      '“🌹 认真练字、开心跳绳，你就是最闪耀的小公主！”',
+      '“🏰 迪士尼城堡的大门正在为你缓缓开启！”',
+      '“🎆 灿烂的烟花，送给最棒的杨妙绮！”'
+    ];
+
+    const DEFAULT_CUSTOM_REASONS = [
+      '叠被子',
+      '套垃圾袋',
+      '主动阅读绘本30分钟',
+      '自己主动收拾整理玩具与书桌',
+      '独立按时完成家庭作业',
+      '主动礼貌问候与分享'
+    ];
+
+    const DEFAULT_CUSTOM_DEDUCT_REASONS = [
+      '未遵守时间约定关电视/平板',
+      '顶撞发脾气、不讲道理',
+      '故意乱扔乱丢物品不收拾',
+      '睡前极度拖拉磨蹭不刷牙'
+    ];
+
+    const DEFAULT_PRIZES = [
+      {
+        id: 'disney',
+        name: '迪士尼乐园奇妙之旅（年卡出游）',
+        cost: 500,
+        desc: '和爸爸妈妈畅玩迪士尼一整天，在城堡前看最盛大的真烟花秀！',
+        icon: '🏰',
+        isGrand: true,
+        isBuiltin: true
+      },
+      {
+        id: 'feast',
+        name: '外出吃心仪大餐（预算200~300元）',
+        cost: 200,
+        desc: '全家外出聚餐！由妙绮小公主钦定一家最爱的餐厅（披萨/牛排/烤肉/寿司等）',
+        icon: '🍽️',
+        isGrand: true,
+        isBuiltin: true
+      },
+      {
+        id: 'icecream',
+        name: '自选冰淇淋/甜品',
+        cost: 30,
+        desc: '自选一份心仪的冰淇淋球、小蛋糕或美味甜点',
+        icon: '🍦',
+        isGrand: false,
+        isBuiltin: true
+      },
+      {
+        id: 'book',
+        name: '精美绘本/贴纸书',
+        cost: 150,
+        desc: '自选一本喜欢的迪士尼公主贴纸书或课外绘本',
+        icon: '📚',
+        isGrand: false,
+        isBuiltin: true
+      },
+      {
+        id: 'toy',
+        name: '心仪玩具/盲盒',
+        cost: 300,
+        desc: '挑选一个心仪的迪士尼周边、盲盒或小玩具',
+        icon: '🎁',
+        isGrand: false,
+        isBuiltin: true
+      }
+    ];
+
+    let appState = {
+      score: 0,
+      princessId: 'elsa',
+      soundEnabled: true,
+      history: [],
+      weekWritingCount: 0,
+      weekJumpCount: 0,
+      hasClaimedWeeklyWriting: false,
+      hasClaimedWeeklyJump: false,
+      todayEarned: 0,
+      lastCheckDate: new Date().toDateString(),
+      customReasons: [...DEFAULT_CUSTOM_REASONS],
+      customDeductReasons: [...DEFAULT_CUSTOM_DEDUCT_REASONS],
+      prizes: [...DEFAULT_PRIZES]
+    };
+
+    // 服务端同步加锁，确保拉取服务端数据成功前，绝对不往服务端推送 0 分覆盖
+    let isServerSynced = false;
+    let lastRenderedFingerprint = '';
+
+    function computeStateFingerprint(state) {
+      if (!state) return '';
+      return JSON.stringify({
+        score: state.score,
+        princessId: state.princessId,
+        soundEnabled: state.soundEnabled,
+        todayEarned: state.todayEarned,
+        weekWritingCount: state.weekWritingCount,
+        weekJumpCount: state.weekJumpCount,
+        hasClaimedWeeklyWriting: state.hasClaimedWeeklyWriting,
+        hasClaimedWeeklyJump: state.hasClaimedWeeklyJump,
+        lastCheckDate: state.lastCheckDate,
+        history: state.history,
+        prizes: state.prizes,
+        customReasons: state.customReasons,
+        customDeductReasons: state.customDeductReasons
+      });
+    }
+
+    async function loadState() {
+      // 1. 先从 localStorage 读取本地缓存，以秒开界面
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          Object.assign(appState, parsed);
+        }
+      } catch (e) {
+        console.error('Failed to load local storage', e);
+      }
+
+      // 确保数组健全
+      ensureStateArrays();
+      lastRenderedFingerprint = computeStateFingerprint(appState);
+      renderUI();
+
+      // 2. 核心：强制从电脑服务端 data.json 同步真实数据（防缓存）
+      await syncFromServer();
+
+      // 3. 检查跨日重置今日所得
+      const todayStr = new Date().toDateString();
+      if (appState.lastCheckDate !== todayStr) {
+        appState.todayEarned = 0;
+        appState.lastCheckDate = todayStr;
+        saveState();
+      }
+    }
+
+    function ensureStateArrays() {
+      if (!Array.isArray(appState.history)) appState.history = [];
+      if (typeof appState.hasClaimedWeeklyWriting !== 'boolean') appState.hasClaimedWeeklyWriting = false;
+      if (typeof appState.hasClaimedWeeklyJump !== 'boolean') appState.hasClaimedWeeklyJump = false;
+      if (!Array.isArray(appState.customReasons) || appState.customReasons.length === 0) {
+        appState.customReasons = [...DEFAULT_CUSTOM_REASONS];
+      }
+      if (!Array.isArray(appState.customDeductReasons) || appState.customDeductReasons.length === 0) {
+        appState.customDeductReasons = [...DEFAULT_CUSTOM_DEDUCT_REASONS];
+      }
+      if (!Array.isArray(appState.prizes) || appState.prizes.length === 0) {
+        appState.prizes = [...DEFAULT_PRIZES];
+      }
+      // 纠正奖品历史冗余多重 emoji 图标
+      appState.prizes.forEach(p => {
+        if (p.id === 'disney' && (p.icon === '🎆🏰✨' || !p.icon)) p.icon = '🏰';
+        if (p.id === 'feast' && (p.icon === '🍽️🍕🥩' || !p.icon)) p.icon = '🍽️';
+      });
+      // 过滤旧残留的抓娃娃
+      appState.prizes = appState.prizes.filter(p => !p.name.includes('抓娃娃'));
+    }
+
+    function getApiUrl() {
+      return (window.location.pathname.startsWith("/xiguan") ? "/xiguan/api/data" : "/api/data");
+    }
+
+    async function syncFromServer() {
+      if (!window.location.protocol.startsWith('http')) {
+        isServerSynced = true;
+        return;
+      }
+
+      try {
+        const res = await fetch(getApiUrl() + '?t=' + Date.now());
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        if (data && typeof data.score === 'number') {
+          // 检查数据是否有实质变更
+          const incomingFingerprint = computeStateFingerprint(data);
+          if (isServerSynced && incomingFingerprint === lastRenderedFingerprint) {
+            // 服务端数据完全一致，跳过重绘 DOM，彻底杜绝定时闪屏
+            return;
+          }
+
+          // 合并服务端数据
+          Object.assign(appState, data);
+          ensureStateArrays();
+          isServerSynced = true;
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+          } catch (e) {}
+
+          lastRenderedFingerprint = computeStateFingerprint(appState);
+          renderUI();
+        } else if (!isServerSynced && (appState.score > 0 || appState.history.length > 0)) {
+          // 服务端为空而本地有数据时首次上报
+          isServerSynced = true;
+          syncToServer();
+        } else {
+          isServerSynced = true;
+        }
+      } catch (e) {
+        console.warn('Sync from server error:', e);
+        // 若离线，仍允许本地正常使用
+        isServerSynced = true;
+      }
+    }
+
+    function syncToServer() {
+      if (!isServerSynced) {
+        console.warn('Prevented early syncToServer before server data was fetched!');
+        return;
+      }
+      if (window.location.protocol.startsWith('http')) {
+        fetch(getApiUrl() + '?t=' + Date.now(), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(appState)
+        }).catch(err => console.warn('Sync to server error:', err));
+      }
+    }
+
+    function saveState() {
+      ensureStateArrays();
+      lastRenderedFingerprint = computeStateFingerprint(appState);
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (e) {
+        console.error('Failed to save storage', e);
+      }
+      syncToServer();
+      renderUI();
+    }
+
+    /* ==========================================================
+       2. PRINCESS CUSTOM MODAL SYSTEM (替换全局原生弹窗)
+       ========================================================== */
+    let dialogResolve = null;
+
+    function showPrincessAlert(message, options = {}) {
+      return new Promise((resolve) => {
+        dialogResolve = resolve;
+        const modal = document.getElementById('princessDialogModal');
+        const badge = document.getElementById('princessDialogBadge');
+        const title = document.getElementById('princessDialogTitle');
+        const body = document.getElementById('princessDialogBody');
+        const input = document.getElementById('princessDialogInput');
+        const btnCancel = document.getElementById('princessDialogBtnCancel');
+        const btnConfirm = document.getElementById('princessDialogBtnConfirm');
+
+        badge.innerText = options.icon || '✨';
+        title.innerText = options.title || '魔法提示';
+        body.innerText = message;
+        input.style.display = 'none';
+
+        btnCancel.style.display = 'none';
+        btnConfirm.innerText = options.buttonText || options.confirmText || '好的 ✨';
+        btnConfirm.className = 'princess-dialog-btn primary';
+
+        btnConfirm.onclick = () => {
+          modal.classList.remove('active');
+          if (dialogResolve) dialogResolve(true);
+        };
+
+        modal.classList.add('active');
+      });
+    }
+
+    function showPrincessConfirm(message, options = {}) {
+      return new Promise((resolve) => {
+        dialogResolve = resolve;
+        const modal = document.getElementById('princessDialogModal');
+        const badge = document.getElementById('princessDialogBadge');
+        const title = document.getElementById('princessDialogTitle');
+        const body = document.getElementById('princessDialogBody');
+        const input = document.getElementById('princessDialogInput');
+        const btnCancel = document.getElementById('princessDialogBtnCancel');
+        const btnConfirm = document.getElementById('princessDialogBtnConfirm');
+
+        badge.innerText = options.icon || '👑';
+        title.innerText = options.title || '确认提示';
+        body.innerText = message;
+        input.style.display = 'none';
+
+        btnCancel.style.display = 'block';
+        btnCancel.innerText = options.cancelText || '取消';
+        btnConfirm.innerText = options.confirmText || '确认 ✨';
+        btnConfirm.className = options.isDanger ? 'princess-dialog-btn danger' : 'princess-dialog-btn primary';
+
+        btnCancel.onclick = () => {
+          modal.classList.remove('active');
+          if (dialogResolve) dialogResolve(false);
+        };
+
+        btnConfirm.onclick = () => {
+          modal.classList.remove('active');
+          if (dialogResolve) dialogResolve(true);
+        };
+
+        modal.classList.add('active');
+      });
+    }
+
+    function showPrincessPrompt(message, defaultValue = '', options = {}) {
+      return new Promise((resolve) => {
+        dialogResolve = resolve;
+        const modal = document.getElementById('princessDialogModal');
+        const badge = document.getElementById('princessDialogBadge');
+        const title = document.getElementById('princessDialogTitle');
+        const body = document.getElementById('princessDialogBody');
+        const input = document.getElementById('princessDialogInput');
+        const btnCancel = document.getElementById('princessDialogBtnCancel');
+        const btnConfirm = document.getElementById('princessDialogBtnConfirm');
+
+        badge.innerText = options.icon || '✏️';
+        title.innerText = options.title || '请输入';
+        body.innerText = message;
+
+        input.style.display = 'block';
+        input.value = defaultValue;
+        input.placeholder = options.placeholder || '';
+
+        btnCancel.style.display = 'block';
+        btnCancel.innerText = options.cancelText || '取消';
+        btnConfirm.innerText = options.confirmText || '确定';
+        btnConfirm.className = 'princess-dialog-btn primary';
+
+        btnCancel.onclick = () => {
+          modal.classList.remove('active');
+          if (dialogResolve) dialogResolve(null);
+        };
+
+        btnConfirm.onclick = () => {
+          const val = input.value.trim();
+          modal.classList.remove('active');
+          if (dialogResolve) dialogResolve(val);
+        };
+
+        modal.classList.add('active');
+        setTimeout(() => input.focus(), 200);
+      });
+    }
+
+    // 重写系统自带的 alert, confirm, prompt，双重保障不出现原生灰色丑弹窗
+    window.alert = (msg) => showPrincessAlert(msg);
+    window.confirm = (msg) => {
+      // 兜底同步警告，推荐使用 await showPrincessConfirm
+      return showPrincessConfirm(msg);
+    };
+
+    /* ==========================================================
+       3. WEB AUDIO API SYNTHESIZER (音效合成器)
+       ========================================================== */
+    let audioCtx = null;
+    let isFireworksOpen = false;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) audioCtx = new AudioContext();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playSound(type) {
+      if (!appState.soundEnabled) return;
+      // 烟花盛典开启期间，严格屏蔽所有合成杂音，纯享《快乐无边》背景音乐
+      if (isFireworksOpen) return;
+
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      const now = ctx.currentTime;
+      if (type === 'coin') {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(987.77, now); // B5
+        osc.frequency.exponentialRampToValueAtTime(1318.51, now + 0.12); // E6
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      } else if (type === 'fanfare') {
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.type = 'triangle';
+          osc.frequency.value = freq;
+          const start = now + idx * 0.1;
+          gain.gain.setValueAtTime(0.18, start);
+          gain.gain.exponentialRampToValueAtTime(0.001, start + 0.3);
+          osc.start(start);
+          osc.stop(start + 0.3);
+        });
+      }
+    }
+
+    function toggleSound() {
+      appState.soundEnabled = !appState.soundEnabled;
+      const btn = document.getElementById('soundToggleBtn');
+      if (btn) btn.innerText = appState.soundEnabled ? '🔔 声音: 开' : '🔕 声音: 关';
+      saveState();
+    }
+
+    /* ==========================================================
+       4. UI RENDERING ENGINE
+       ========================================================== */
+    function renderUI() {
+      // 1. Current Score
+      const scoreElem = document.getElementById('currentScoreDisplay');
+      if (scoreElem) scoreElem.innerText = appState.score;
+
+      // 2. Goal Progress Bar (500 pts target)
+      const target = 500;
+      const pct = Math.min(100, Math.round((appState.score / target) * 100));
+      const bar = document.getElementById('goalProgressBar');
+      const pctText = document.getElementById('progressPercentText');
+      const remText = document.getElementById('remainingPtsText');
+
+      if (bar) bar.style.width = pct + '%';
+      if (pctText) pctText.innerText = `${appState.score} / ${target} 分 (${pct}%)`;
+
+      if (remText) {
+        const remain = target - appState.score;
+        if (remain <= 0) {
+          remText.innerHTML = '🎉 <strong>太棒啦！500分达成！可以去迪士尼看烟花啦！</strong>';
+        } else {
+          remText.innerText = `✨ 还需 ${remain} 积分即可去迪士尼看真烟花！`;
+        }
+      }
+
+      // 3. Quick Stats
+      const todayElem = document.getElementById('todayEarnedDisplay');
+      if (todayElem) todayElem.innerText = '+' + appState.todayEarned;
+
+      const writeCountElem = document.getElementById('weekWritingCount');
+      if (writeCountElem) writeCountElem.innerText = `${appState.weekWritingCount} / 4 张`;
+
+      const jumpCountElem = document.getElementById('weekJumpCount');
+      if (jumpCountElem) jumpCountElem.innerText = `${appState.weekJumpCount} / 4 次`;
+
+      // 4. Princess Profile
+      const curPrincess = PRINCESSES.find(p => p.id === appState.princessId) || PRINCESSES[0];
+      const avatarImg = document.getElementById('princessAvatarImg');
+      const avatarEmoji = document.getElementById('princessAvatarEmoji');
+      const nameTag = document.getElementById('princessDisplayName');
+      const quoteText = document.getElementById('princessQuoteText');
+
+      if (avatarImg && curPrincess.avatar) {
+        avatarImg.src = curPrincess.avatar;
+        avatarImg.style.display = 'block';
+        if (avatarEmoji) avatarEmoji.style.display = 'none';
+      } else if (avatarEmoji) {
+        avatarEmoji.innerText = curPrincess.emoji;
+        avatarEmoji.style.display = 'block';
+        if (avatarImg) avatarImg.style.display = 'none';
+      }
+      if (nameTag) nameTag.innerText = `妙绮·${curPrincess.name}小公主`;
+      if (quoteText) quoteText.innerText = curPrincess.quote;
+
+      // 5. Today Date Badge
+      const dateBadge = document.getElementById('todayDateBadge');
+      if (dateBadge) {
+        const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+        const d = new Date();
+        dateBadge.innerText = `${d.getMonth() + 1}月${d.getDate()}日 ${days[d.getDay()]}`;
+      }
+
+      // 6. Mall Cards
+      renderMallGrid();
+      renderMallRecentRedemptions();
+
+      // 7. History List
+      renderHistory();
+
+      // 8. Parent Undo List
+      renderParentUndo();
+
+      // 9. Desktop QR Code
+      updateDesktopQrCode();
+    }
+
+    function updateDesktopQrCode() {
+      const qrImg = document.getElementById('desktopQrCodeImg');
+      const urlText = document.getElementById('desktopQrUrlText');
+      if (!qrImg) return;
+
+      let targetUrl = window.location.href;
+      if (targetUrl.startsWith('file:')) {
+        targetUrl = 'http://192.168.31.86:8080/';
+      }
+
+      if (urlText && urlText.innerText !== targetUrl) {
+        urlText.innerText = targetUrl;
+      }
+      const newSrc = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(targetUrl);
+      if (qrImg.getAttribute('data-loaded-src') !== newSrc) {
+        qrImg.setAttribute('data-loaded-src', newSrc);
+        qrImg.src = newSrc;
+      }
+    }
+
+    function copyCurrentUrl() {
+      const targetUrl = window.location.href.startsWith('file:') ? 'http://192.168.31.86:8080/' : window.location.href;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(targetUrl).then(() => {
+          showPrincessAlert(`已复制链接到剪贴板！\n\n手机连接同一Wi-Fi后在浏览器打开即可：\n${targetUrl}`, {
+            title: '链接已复制',
+            icon: '📋'
+          });
+        });
+      } else {
+        showPrincessPrompt('请长按复制此链接并在手机浏览器打开：', targetUrl, {
+          title: '手机访问链接',
+          icon: '📱'
+        });
+      }
+    }
+
+    let historyCurrentPage = 1;
+    const HISTORY_PAGE_SIZE = 10;
+    let historyFilterType = 'all';
+
+    function setHistoryFilter(type, btnElem) {
+      historyFilterType = type;
+      historyCurrentPage = 1;
+      document.querySelectorAll('.history-filter-pill').forEach(b => b.classList.remove('active'));
+      if (btnElem) btnElem.classList.add('active');
+      renderHistory();
+    }
+
+    function changeHistoryPage(delta) {
+      historyCurrentPage += delta;
+      renderHistory();
+      const historyCard = document.querySelector('.history-card');
+      if (historyCard) {
+        historyCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    function renderHistory() {
+      const container = document.getElementById('historyListContainer');
+      const paginationWrap = document.getElementById('historyPagination');
+      const countBadge = document.getElementById('historyCountBadge');
+      if (!container) return;
+
+      const allHistory = Array.isArray(appState.history) ? appState.history : [];
+
+      if (countBadge) {
+        countBadge.innerText = `共 ${allHistory.length} 条`;
+      }
+
+      // 1. 过滤：带上原始全局索引 originalIndex，保证撤回操作始终对应正确的数据项
+      let filteredList = allHistory.map((item, originalIndex) => ({ item, originalIndex }));
+      if (historyFilterType === 'plus') {
+        filteredList = filteredList.filter(entry => entry.item.pts >= 0);
+      } else if (historyFilterType === 'minus') {
+        filteredList = filteredList.filter(entry => entry.item.pts < 0);
+      }
+
+      const totalItems = filteredList.length;
+      const totalPages = Math.max(1, Math.ceil(totalItems / HISTORY_PAGE_SIZE));
+
+      // 边界校准
+      if (historyCurrentPage > totalPages) {
+        historyCurrentPage = totalPages;
+      }
+      if (historyCurrentPage < 1) {
+        historyCurrentPage = 1;
+      }
+
+      if (totalItems === 0) {
+        let emptyMsg = '今日还没有记录，开始打卡赢取魔法星吧！';
+        if (historyFilterType === 'plus') emptyMsg = '暂无奖励加分明细哦 ✨';
+        if (historyFilterType === 'minus') emptyMsg = '暂无兑换或扣分明细哦 🎁';
+        container.innerHTML = `
+          <div style="text-align:center; padding:30px 0; color:#9ca3af; font-size:13px;">
+            <div style="font-size:36px; margin-bottom:8px;">🌸</div>
+            ${emptyMsg}
+          </div>
+        `;
+        if (paginationWrap) paginationWrap.innerHTML = '';
+        return;
+      }
+
+      // 2. 切片截取当前页展示的数据项
+      const startIndex = (historyCurrentPage - 1) * HISTORY_PAGE_SIZE;
+      const pageItems = filteredList.slice(startIndex, startIndex + HISTORY_PAGE_SIZE);
+
+      container.innerHTML = pageItems.map(({ item, originalIndex }) => {
+        const isPlus = item.pts >= 0;
+        const sign = isPlus ? `+${item.pts}` : `${item.pts}`;
+        return `
+          <div class="history-item">
+            <div class="history-left">
+              <div class="history-reason">${escapeHtml(item.reason)}</div>
+              <div class="history-time">${escapeHtml(item.time)}</div>
+            </div>
+            <div class="history-right">
+              <span class="history-pts ${isPlus ? 'plus' : 'minus'}">${sign}分</span>
+              <button class="history-revoke-btn" onclick="revokeHistoryItem(${originalIndex})">↩️ 撤回</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // 3. 渲染分页控制器
+      if (paginationWrap) {
+        if (totalPages <= 1) {
+          paginationWrap.innerHTML = '';
+        } else {
+          const prevDisabled = historyCurrentPage <= 1 ? 'disabled' : '';
+          const nextDisabled = historyCurrentPage >= totalPages ? 'disabled' : '';
+          paginationWrap.innerHTML = `
+            <button class="page-nav-btn" onclick="changeHistoryPage(-1)" ${prevDisabled}>◀ 上一页</button>
+            <span class="page-info-text">第 ${historyCurrentPage} / ${totalPages} 页</span>
+            <button class="page-nav-btn" onclick="changeHistoryPage(1)" ${nextDisabled}>下一页 ▶</button>
+          `;
+        }
+      }
+    }
+
+    function switchTab(viewId, btnElem) {
+      document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+
+      const target = document.getElementById(viewId);
+      if (target) target.classList.add('active');
+      if (btnElem) btnElem.classList.add('active');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ==========================================================
+       5. POINT TRANSACTIONS & CORE ACTIONS
+       ========================================================== */
+    function earnPoints(amount, reason, isMilestone = false) {
+      playSound('coin');
+      triggerHaptic();
+      showFloatingPoints(`+${amount} ✨`);
+
+      appState.score += amount;
+      appState.todayEarned += amount;
+
+      const now = new Date();
+      const timeStr = `${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+      // 1. 独立记录单项打卡奖励
+      historyCurrentPage = 1;
+      appState.history.unshift({
+        pts: amount,
+        reason: reason,
+        time: timeStr
+      });
+
+      let unlockedStreakType = ''; // 'writing' | 'jump'
+
+      // 2. 检查是否达成全勤门槛（字帖 4 张、跳绳 4 次）
+      // 只有每日打卡规范字帖与跳绳达标才增加周计次；全勤大礼包与红星奖是奖励，绝对不增加次数
+      if (reason.includes('规范字帖') && !reason.includes('全勤')) {
+        appState.weekWritingCount++;
+        if (appState.weekWritingCount >= 4 && !appState.hasClaimedWeeklyWriting) {
+          appState.hasClaimedWeeklyWriting = true;
+          appState.score += 20;
+          appState.todayEarned += 20;
+          // 独立记录全勤大礼包奖励（第二笔独立记录）
+          appState.history.unshift({
+            pts: 20,
+            reason: '🏅 本周字帖满4张全勤大礼包（自动达成）',
+            time: timeStr
+          });
+          unlockedStreakType = 'writing';
+        }
+      } else if (reason.includes('跳绳达标') && !reason.includes('全勤')) {
+        appState.weekJumpCount++;
+        if (appState.weekJumpCount >= 4 && !appState.hasClaimedWeeklyJump) {
+          appState.hasClaimedWeeklyJump = true;
+          appState.score += 20;
+          appState.todayEarned += 20;
+          // 独立记录全勤大礼包奖励（第二笔独立记录）
+          appState.history.unshift({
+            pts: 20,
+            reason: '🏅 本周跳绳满4次全勤大礼包（自动达成）',
+            time: timeStr
+          });
+          unlockedStreakType = 'jump';
+        }
+      }
+
+      saveState();
+
+      if (unlockedStreakType) {
+        playSound('fanfare');
+        showFloatingPoints('+20 🏅');
+        showUndoToast(`已打卡：${reason} (+${amount}分) + 全勤大礼包(+20分)！`);
+        const isWriting = unlockedStreakType === 'writing';
+        const taskName = isWriting ? '规范练字' : '阳光跳绳';
+        const streakName = isWriting ? '字帖' : '跳绳';
+        setTimeout(() => {
+          showPrincessAlert(
+            `🎉 哇！太棒啦！妙绮小公主本周【${taskName}】已达标 4 次！\n\n✨ 存折已分别为您入账两条明细：\n1. 【${reason}】：+${amount} 分\n2. 【🏅 本周${streakName}满4次全勤大礼包】：+20 分\n\n本次合计入账 +${amount + 20} 积分！表现超级棒！`,
+            {
+              title: `周${streakName}全勤自动达成！`,
+              icon: '🏅',
+              buttonText: '太棒啦 ✨'
+            }
+          );
+        }, 300);
+      } else {
+        showUndoToast(`已打卡：${reason} (+${amount}分)`);
+      }
+
+      const totalEarnedThisAction = amount + (unlockedStreakType ? 20 : 0);
+      if (appState.score >= 500 && appState.score - totalEarnedThisAction < 500) {
+        setTimeout(async () => {
+          await showPrincessAlert('🎆 哇！恭喜杨妙绮小公主达成 500 积分终极目标！\n\n准备好去迪士尼乐园看城堡真烟花啦！', {
+            title: '500分达成！',
+            icon: '🎆',
+            buttonText: '开启盛大真烟花秀 🏰'
+          });
+          openFireworksView();
+          triggerGrandFinale();
+        }, 600);
+      }
+    }
+
+    async function deductMorningPoints() {
+      const confirmed = await showPrincessConfirm(
+        '⚠️ 确认记录【迟到 / 早上严重拖拉】并扣除 20 积分吗？\n\n💡 规则小贴士：\n扣分前请先给妙绮 1 次温和黄牌提醒；就事论事不迁怒，温和鼓励她明天早起动作快就能赢回来！',
+        {
+          title: '迟到扣分提醒',
+          icon: '🐢',
+          confirmText: '确认扣除20分',
+          cancelText: '取消',
+          isDanger: true
+        }
+      );
+      if (!confirmed) return;
+
+      triggerHaptic();
+      const deductAmount = 20;
+      appState.score = Math.max(0, appState.score - deductAmount);
+      showFloatingPoints('-20 🐢', true);
+
+      const now = new Date();
+      const timeStr = `${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      historyCurrentPage = 1;
+      appState.history.unshift({
+        pts: -deductAmount,
+        reason: '🐢 迟到/早上严重拖拉警告',
+        time: timeStr
+      });
+
+      saveState();
+      showUndoToast('已记录【迟到/早上严重拖拉 -20分】');
+      showPrincessAlert('已记录【迟到/严重拖拉 -20分】。\n\n温和告诉妙绮小公主：魔法虽然暂时溜走了20分，但明天早上早起动作快，马上就能赢回来！', {
+        title: '明日早起赢回 ✨',
+        icon: '⏰',
+        buttonText: '我知道啦'
+      });
+    }
+
+    function earnHousework(amount, reason) {
+      closeHouseworkPicker();
+      earnPoints(amount, reason);
+    }
+
+    function claimWeeklyWriting() {
+      closeWeeklyModal();
+      if (appState.hasClaimedWeeklyWriting) {
+        showPrincessAlert('本周字帖全勤大礼包已经发放过啦！', { title: '已领取', icon: '✅' });
+        return;
+      }
+      appState.hasClaimedWeeklyWriting = true;
+      appState.score += 20;
+      appState.todayEarned += 20;
+      const now = new Date();
+      const timeStr = `${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      historyCurrentPage = 1;
+      appState.history.unshift({
+        pts: 20,
+        reason: '🏅 本周写字满4张全勤大礼包',
+        time: timeStr
+      });
+      saveState();
+      playSound('fanfare');
+      showPrincessAlert('🎉 恭喜领取本周字帖满4张全勤大礼包 (+20分)！', { title: '全勤领取成功', icon: '🏅' });
+    }
+
+    function claimWeeklyJump() {
+      closeWeeklyModal();
+      if (appState.hasClaimedWeeklyJump) {
+        showPrincessAlert('本周跳绳全勤大礼包已经发放过啦！', { title: '已领取', icon: '✅' });
+        return;
+      }
+      appState.hasClaimedWeeklyJump = true;
+      appState.score += 20;
+      appState.todayEarned += 20;
+      const now = new Date();
+      const timeStr = `${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      historyCurrentPage = 1;
+      appState.history.unshift({
+        pts: 20,
+        reason: '🏅 本周跳绳满4次全勤大礼包',
+        time: timeStr
+      });
+      saveState();
+      playSound('fanfare');
+      showPrincessAlert('🎉 恭喜领取本周跳绳满4次全勤大礼包 (+20分)！', { title: '全勤领取成功', icon: '🏅' });
+    }
+
+    /* ==========================================================
+       6. WISH MALL (心愿商城渲染、兑换、动态增删)
+       ========================================================== */
+    function renderMallGrid() {
+      const container = document.getElementById('mallGridContainer');
+      if (!container) return;
+
+      let html = '';
+
+      // 现金兑换卡片 (内置 10:1 规则)
+      html += `
+        <div class="mall-card" style="border:1.5px solid #bbf7d0; background:linear-gradient(135deg, rgba(240,253,244,0.6) 0%, rgba(255,255,255,0.95) 100%);">
+          <div class="mall-card-top">
+            <div class="mall-icon" style="background:#dcfce7; color:#15803d;">💰</div>
+            <div class="mall-info">
+              <div class="mall-name">兑换零用钱存入透明小存钱罐</div>
+              <div class="mall-cost">10 积分 = 1 元人民币</div>
+            </div>
+          </div>
+          <div class="mall-desc">培养财商！自己赚取的零用钱，可随时向爸妈兑换现金硬币/纸币存入属于你的存钱罐。</div>
+          <div class="mall-action-row">
+            <button class="mall-redeem-btn" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="redeemCash()">
+              🪙 兑换零用钱 (当前可兑 ${Math.floor(appState.score / 10)} 元)
+            </button>
+          </div>
+        </div>
+      `;
+
+      // 遍历渲染 appState.prizes 列表
+      appState.prizes.forEach(prize => {
+        const canRedeem = appState.score >= prize.cost;
+        const diff = prize.cost - appState.score;
+        const btnText = canRedeem ? `✨ 立即兑换 (${prize.cost}分)` : `还差 ${diff} 积分可兑换`;
+        let displayIcon = prize.icon || '🎁';
+        if (displayIcon === '🎆🏰✨') displayIcon = '🏰';
+        if (displayIcon === '🍽️🍕🥩') displayIcon = '🍽️';
+
+        html += `
+          <div class="mall-card ${prize.isGrand ? 'grand-prize' : ''}">
+            ${prize.isGrand ? '<span class="mall-grand-badge">👑 终极梦想</span>' : ''}
+            <div class="mall-card-top">
+              <div class="mall-icon">${displayIcon}</div>
+              <div class="mall-info">
+                <div class="mall-name">${escapeHtml(prize.name)}</div>
+                <div class="mall-cost">${prize.cost} 魔法星积分</div>
+              </div>
+            </div>
+            <div class="mall-desc">${escapeHtml(prize.desc)}</div>
+            <div class="mall-action-row">
+              <button class="mall-redeem-btn" ${canRedeem ? '' : 'disabled'} onclick="redeemPrize('${escapeHtml(prize.name)}', ${prize.cost}, ${prize.isGrand || false})">
+                ${btnText}
+              </button>
+              ${!prize.isBuiltin ? `<button class="mall-delete-btn" onclick="deleteCustomPrize('${prize.id}')">🗑️ 删除</button>` : ''}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function renderMallRecentRedemptions() {
+      const container = document.getElementById('mallRecentRedemptions');
+      if (!container) return;
+
+      if (!Array.isArray(appState.history) || appState.history.length === 0) {
+        container.innerHTML = '';
+        return;
+      }
+
+      const redemptions = [];
+      for (let i = 0; i < appState.history.length; i++) {
+        const item = appState.history[i];
+        if (item.pts < 0 && (item.reason.includes('兑换') || item.reason.includes('🎁') || item.reason.includes('💰'))) {
+          redemptions.push({ item, index: i });
+          if (redemptions.length >= 3) break;
+        }
+      }
+
+      if (redemptions.length === 0) {
+        container.innerHTML = '';
+        return;
+      }
+
+      let itemsHtml = redemptions.map(r => `
+        <div class="mall-undo-item">
+          <div class="mall-undo-info">
+            <span class="mall-undo-name">${escapeHtml(r.item.reason)}</span>
+            <span class="mall-undo-meta">${r.item.time} · 消耗 ${Math.abs(r.item.pts)} 积分</span>
+          </div>
+          <button class="mall-undo-btn" onclick="revokeHistoryItem(${r.index})">↩️ 撤回兑换并退分</button>
+        </div>
+      `).join('');
+
+      container.innerHTML = `
+        <div class="mall-undo-card">
+          <div class="mall-undo-header">
+            <span class="mall-undo-title">🛍️ 最近兑换记录</span>
+            <span style="font-size:10.5px; color:#be185d;">点错可随时撤回退还积分</span>
+          </div>
+          ${itemsHtml}
+        </div>
+      `;
+    }
+
+    async function redeemPrize(prizeName, cost, isGrandPrize = false) {
+      if (appState.score < cost) {
+        showPrincessAlert(`🌟 亲爱的妙绮小公主，你的魔法星还差 ${cost - appState.score} 颗哦！\n\n再认真完成两项任务就能兑换啦，加油！`, {
+          title: '积分还差一点点',
+          icon: '✨'
+        });
+        return;
+      }
+
+      const confirmed = await showPrincessConfirm(
+        `👑 妙绮小公主，确认消耗 ${cost} 积分兑换【${prizeName}】吗？\n\n兑换后魔法存折将扣除 ${cost} 分。`,
+        {
+          title: '心愿兑换确认',
+          icon: '🎁',
+          confirmText: '确认兑换 ✨',
+          cancelText: '再想想'
+        }
+      );
+      if (!confirmed) return;
+
+      playSound(isGrandPrize ? 'fanfare' : 'coin');
+      triggerHaptic();
+
+      appState.score -= cost;
+
+      const now = new Date();
+      const timeStr = `${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      historyCurrentPage = 1;
+      appState.history.unshift({
+        pts: -cost,
+        reason: `🎁 兑换心愿：${prizeName}`,
+        time: timeStr
+      });
+
+      saveState();
+      showUndoToast(`已兑换【${prizeName}】(-${cost}分)`);
+
+      if (isGrandPrize) {
+        await showPrincessAlert(`🎉 恭喜妙绮小公主成功兑换【${prizeName}】！\n\n盛大烟花盛典开启，请向爸爸妈妈预约迪士尼行程吧！`, {
+          title: '终极梦想达成！',
+          icon: '🎆',
+          buttonText: '开启真烟花盛典 🏰'
+        });
+        openFireworksView();
+        triggerGrandFinale();
+      } else {
+        showPrincessAlert(`🎉 兑换成功！\n\n请向爸爸妈妈出示这条记录，即可享受【${prizeName}】！\n\n💡 家长防误触提醒：如果不小心点错，可点击底部浮条或在【明细/家长专区】随时一键撤回退还积分。`, {
+          title: '心愿兑换成功',
+          icon: '🎉',
+          buttonText: '开心享受 🍦'
+        });
+      }
+    }
+
+    async function redeemCash() {
+      const maxExchange = Math.floor(appState.score / 10);
+      if (maxExchange < 1) {
+        showPrincessAlert('🌟 至少需要 10 积分才可以兑换 1 元零用钱哦！', {
+          title: '积分不足',
+          icon: '🪙'
+        });
+        return;
+      }
+
+      const input = await showPrincessPrompt(
+        `💰 当前最多可兑换 ${maxExchange} 元人民币 (10积分 = 1元)\n请输入你想兑换的金额(元)：`,
+        '1',
+        {
+          title: '兑换零用钱存入存钱罐',
+          icon: '💰',
+          placeholder: '输入金额（如 1、2、5）'
+        }
+      );
+
+      if (!input) return;
+      const amountYuan = parseInt(input);
+      if (isNaN(amountYuan) || amountYuan <= 0) {
+        showPrincessAlert('请输入有效的金额数值哦！', { title: '输入有误', icon: '💡' });
+        return;
+      }
+
+      const cost = amountYuan * 10;
+      if (appState.score < cost) {
+        showPrincessAlert(`积分不足！兑换 ${amountYuan} 元需要 ${cost} 积分，当前仅有 ${appState.score} 积分。`, {
+          title: '积分不足',
+          icon: '🪙'
+        });
+        return;
+      }
+
+      const confirmed = await showPrincessConfirm(
+        `确认消耗 ${cost} 积分，兑换 ${amountYuan} 元现金零花钱吗？`,
+        {
+          title: '确认兑换零花钱',
+          icon: '🪙'
+        }
+      );
+      if (!confirmed) return;
+
+      playSound('coin');
+      triggerHaptic();
+
+      appState.score -= cost;
+
+      const now = new Date();
+      const timeStr = `${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      historyCurrentPage = 1;
+      appState.history.unshift({
+        pts: -cost,
+        reason: `💰 兑换现金零钱：${amountYuan} 元`,
+        time: timeStr
+      });
+
+      saveState();
+      showUndoToast(`已兑换现金：${amountYuan}元 (-${cost}分)`);
+      showPrincessAlert(`🎉 成功兑换 ${amountYuan} 元现金！\n\n请找爸爸妈妈领取 ${amountYuan} 元存入你的透明小存钱罐吧！`, {
+        title: '现金兑换成功',
+        icon: '🪙',
+        buttonText: '存入小存钱罐 ✨'
+      });
+    }
+
+    function openNewPrizeModal() {
+      document.getElementById('newPrizeName').value = '';
+      document.getElementById('newPrizeCost').value = '';
+      document.getElementById('newPrizeIcon').value = '🎁';
+      document.getElementById('newPrizeDesc').value = '';
+      document.getElementById('newPrizeModal').classList.add('active');
+    }
+
+    function closeNewPrizeModal() {
+      document.getElementById('newPrizeModal').classList.remove('active');
+    }
+
+    async function confirmNewPrize() {
+      const name = document.getElementById('newPrizeName').value.trim();
+      const cost = parseInt(document.getElementById('newPrizeCost').value);
+      const icon = document.getElementById('newPrizeIcon').value.trim() || '🎁';
+      const desc = document.getElementById('newPrizeDesc').value.trim() || '自定义心愿奖励';
+
+      if (!name) {
+        showPrincessAlert('请输入心愿名称！', { title: '提示', icon: '💡' });
+        return;
+      }
+      if (isNaN(cost) || cost <= 0) {
+        showPrincessAlert('请输入大于0的所需积分！', { title: '提示', icon: '💡' });
+        return;
+      }
+
+      appState.prizes.push({
+        id: 'custom_' + Date.now(),
+        name: name,
+        cost: cost,
+        icon: icon,
+        desc: desc,
+        isGrand: cost >= 400,
+        isBuiltin: false
+      });
+
+      saveState();
+      closeNewPrizeModal();
+      showPrincessAlert(`已成功添加心愿：【${name}】(${cost}分)`, { title: '心愿已添加 ✨', icon: '🎁' });
+    }
+
+    async function deleteCustomPrize(prizeId) {
+      const idx = appState.prizes.findIndex(p => p.id === prizeId);
+      if (idx === -1) return;
+      const prize = appState.prizes[idx];
+
+      const confirmed = await showPrincessConfirm(`确认删除心愿【${prize.name}】吗？`, {
+        title: '删除心愿确认',
+        icon: '🗑️',
+        confirmText: '确认删除',
+        cancelText: '取消',
+        isDanger: true
+      });
+      if (!confirmed) return;
+
+      appState.prizes.splice(idx, 1);
+      saveState();
+      showPrincessAlert(`已删除心愿【${prize.name}】`, { title: '已删除', icon: '🗑️' });
+    }
+
+    /* ==========================================================
+       7. CUSTOM SCORE MODAL (自由记分：加/减分切换、胶囊、名目记忆)
+       ========================================================== */
+    let customModalMode = 'add'; // 'add' | 'deduct'
+
+    function openCustomScoreModal(mode = 'add') {
+      customModalMode = mode;
+      switchCustomModalMode(mode);
+      document.getElementById('customModalScoreInput').value = mode === 'add' ? '10' : '10';
+      document.getElementById('customModalReasonInput').value = '';
+      document.getElementById('customScoreModal').classList.add('active');
+    }
+
+    function closeCustomScoreModal() {
+      document.getElementById('customScoreModal').classList.remove('active');
+    }
+
+    function switchCustomModalMode(mode) {
+      customModalMode = mode;
+      const tabAdd = document.getElementById('modeTabAdd');
+      const tabDeduct = document.getElementById('modeTabDeduct');
+      const modalTitle = document.getElementById('customModalTitle');
+
+      if (mode === 'add') {
+        tabAdd.className = 'custom-mode-tab active-add';
+        tabDeduct.className = 'custom-mode-tab';
+        modalTitle.innerText = '✨ 魔法自由记分 · 表现出色奖励';
+      } else {
+        tabAdd.className = 'custom-mode-tab';
+        tabDeduct.className = 'custom-mode-tab active-deduct';
+        modalTitle.innerText = '⚠️ 魔法自由记分 · 行为提醒扣分';
+      }
+
+      renderCustomScoreChips();
+      renderCustomReasonTags();
+    }
+
+    function renderCustomScoreChips() {
+      const container = document.getElementById('customQuickScoreChips');
+      if (!container) return;
+
+      const chips = customModalMode === 'add'
+        ? [5, 10, 15, 20, 25, 30]
+        : [5, 10, 15, 20];
+
+      const curVal = parseInt(document.getElementById('customModalScoreInput').value) || 10;
+
+      container.innerHTML = chips.map(pts => {
+        const sign = customModalMode === 'add' ? `+${pts}` : `-${pts}`;
+        const isSel = curVal === pts;
+        return `
+          <button class="quick-chip ${isSel ? 'selected' : ''}" onclick="selectCustomScoreChip(${pts})">
+            ${sign}分
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectCustomScoreChip(pts) {
+      document.getElementById('customModalScoreInput').value = pts;
+      renderCustomScoreChips();
+    }
+
+    function renderCustomReasonTags() {
+      const container = document.getElementById('customModalReasonTags');
+      if (!container) return;
+
+      const tagList = customModalMode === 'add' ? appState.customReasons : appState.customDeductReasons;
+
+      if (!Array.isArray(tagList) || tagList.length === 0) {
+        container.innerHTML = '<span style="font-size:11.5px; color:#9ca3af; padding:4px;">暂无名目，录入后将自动在此沉淀</span>';
+        return;
+      }
+
+      container.innerHTML = tagList.map((tag, idx) => `
+        <span class="reason-tag-pill" onclick="selectCustomReasonTag('${escapeHtml(tag)}')">
+          ${escapeHtml(tag)}
+          <span class="reason-tag-del" onclick="deleteCustomReasonTag(event, ${idx})" title="删除此名目">×</span>
+        </span>
+      `).join('');
+    }
+
+    function selectCustomReasonTag(tag) {
+      document.getElementById('customModalReasonInput').value = tag;
+    }
+
+    function deleteCustomReasonTag(event, idx) {
+      event.stopPropagation();
+      if (customModalMode === 'add') {
+        appState.customReasons.splice(idx, 1);
+      } else {
+        appState.customDeductReasons.splice(idx, 1);
+      }
+      saveState();
+      renderCustomReasonTags();
+    }
+
+    function confirmCustomScoreModal() {
+      const scoreVal = parseInt(document.getElementById('customModalScoreInput').value);
+      const reasonVal = document.getElementById('customModalReasonInput').value.trim();
+
+      if (isNaN(scoreVal) || scoreVal <= 0) {
+        showPrincessAlert('请输入大于0的分值！', { title: '提示', icon: '💡' });
+        return;
+      }
+
+      const reason = reasonVal || (customModalMode === 'add' ? '特别优秀表现' : '温和行为提醒');
+      const finalAmount = customModalMode === 'add' ? scoreVal : -scoreVal;
+
+      // 沉淀新名目到记忆库
+      if (reasonVal) {
+        if (customModalMode === 'add') {
+          if (!appState.customReasons.includes(reasonVal)) {
+            appState.customReasons.unshift(reasonVal);
+          }
+        } else {
+          if (!appState.customDeductReasons.includes(reasonVal)) {
+            appState.customDeductReasons.unshift(reasonVal);
+          }
+        }
+      }
+
+      playSound(customModalMode === 'add' ? 'coin' : 'coin');
+      triggerHaptic();
+
+      appState.score = Math.max(0, appState.score + finalAmount);
+      if (finalAmount > 0) appState.todayEarned += finalAmount;
+
+      showFloatingPoints(`${finalAmount > 0 ? '+' : ''}${finalAmount} ✨`, finalAmount < 0);
+
+      const now = new Date();
+      const timeStr = `${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      historyCurrentPage = 1;
+      appState.history.unshift({
+        pts: finalAmount,
+        reason: `${customModalMode === 'add' ? '✨' : '⚠️'} ${reason}`,
+        time: timeStr
+      });
+
+      saveState();
+      closeCustomScoreModal();
+      showUndoToast(`已记录：${reason} (${finalAmount > 0 ? '+' : ''}${finalAmount}分)`);
+      showPrincessAlert(`已成功录入：${finalAmount > 0 ? '+' + finalAmount : finalAmount} 分 (${reason})`, {
+        title: '录入成功 ✨',
+        icon: customModalMode === 'add' ? '✨' : '⚠️'
+      });
+    }
+
+    /* ==========================================================
+       8. PARENT UNDO & REVOKE SYSTEM (家长撤回与防误触)
+       ========================================================== */
+    async function revokeHistoryItem(index) {
+      if (!appState.history || !appState.history[index]) return;
+      const item = appState.history[index];
+
+      let actionDesc = '';
+      let scoreChangeDesc = '';
+
+      if (item.pts < 0) {
+        const refundPts = -item.pts;
+        const isRedeem = item.reason.includes('兑换') || item.reason.includes('🎁') || item.reason.includes('💰');
+        actionDesc = isRedeem
+          ? `该记录为【心愿兑换】，此前消耗了 ${refundPts} 积分`
+          : `该记录为【扣分项】，此前扣除了 ${refundPts} 积分`;
+        scoreChangeDesc = `• 存折将全额退还：+${refundPts} 积分\n• 存折总分将由 ${appState.score} 分 恢复为 ${appState.score + refundPts} 分`;
+      } else if (item.pts > 0) {
+        actionDesc = `该记录为【奖励打卡】，此前发放了 +${item.pts} 积分`;
+        scoreChangeDesc = `• 存折将扣回发放的：-${item.pts} 积分\n• 存折总分将由 ${appState.score} 分 调整为 ${appState.score - item.pts} 分`;
+      } else {
+        scoreChangeDesc = `• 积分为 0，仅清理该条记录`;
+      }
+
+      const confirmed = await showPrincessConfirm(
+        `家长确认撤回以下记录吗？\n\n【${item.reason}】\n记录时间：${item.time}\n\n${actionDesc}\n${scoreChangeDesc}\n\n确认后此记录将立即撤销，积分自动恢复。`,
+        {
+          title: '↩️ 家长撤回确认',
+          icon: '↩️',
+          confirmText: '确认撤回并恢复积分 ✨',
+          cancelText: '取消',
+          isDanger: true
+        }
+      );
+
+      if (!confirmed) return;
+
+      // 1. 恢复总分
+      appState.score = Math.max(0, appState.score - item.pts);
+
+      // 2. 恢复今日所得
+      if (item.pts > 0 && appState.todayEarned > 0) {
+        appState.todayEarned = Math.max(0, appState.todayEarned - item.pts);
+      }
+
+      // 3. 恢复计次（仅针对每日打卡任务，撤回全勤奖励不影响已完成计次）
+      if (item.reason.includes('规范字帖') && !item.reason.includes('全勤') && appState.weekWritingCount > 0) {
+        appState.weekWritingCount--;
+        if (appState.weekWritingCount < 4) {
+          appState.hasClaimedWeeklyWriting = false;
+        }
+      }
+      if (item.reason.includes('跳绳达标') && !item.reason.includes('全勤') && appState.weekJumpCount > 0) {
+        appState.weekJumpCount--;
+        if (appState.weekJumpCount < 4) {
+          appState.hasClaimedWeeklyJump = false;
+        }
+      }
+      if (item.reason.includes('全勤')) {
+        if (item.reason.includes('写字') || item.reason.includes('字帖')) {
+          appState.hasClaimedWeeklyWriting = false;
+        }
+        if (item.reason.includes('跳绳')) {
+          appState.hasClaimedWeeklyJump = false;
+        }
+      }
+
+      // 4. 从明细中移除
+      appState.history.splice(index, 1);
+
+      hideUndoToast();
+      saveState();
+      playSound('coin');
+
+      showPrincessAlert(
+        `🎉 撤回成功！\n\n已成功撤回【${item.reason}】\n小公主当前魔法存折积分已恢复为：${appState.score} 分`,
+        {
+          title: '已成功撤回 ✨',
+          icon: '↩️',
+          buttonText: '太棒啦'
+        }
+      );
+    }
+
+    let _undoToastTimer = null;
+    function showUndoToast(text) {
+      const toast = document.getElementById('floatingUndoToast');
+      const textEl = document.getElementById('floatingUndoText');
+      if (!toast || !textEl) return;
+
+      textEl.innerText = text;
+      toast.classList.add('active');
+
+      if (_undoToastTimer) clearTimeout(_undoToastTimer);
+      _undoToastTimer = setTimeout(() => {
+        hideUndoToast();
+      }, 8500);
+    }
+
+    function hideUndoToast() {
+      const toast = document.getElementById('floatingUndoToast');
+      if (toast) toast.classList.remove('active');
+      if (_undoToastTimer) {
+        clearTimeout(_undoToastTimer);
+        _undoToastTimer = null;
+      }
+    }
+
+    function undoLastAction() {
+      hideUndoToast();
+      if (!appState.history || appState.history.length === 0) return;
+      revokeHistoryItem(0);
+    }
+
+    function renderParentUndo() {
+      const container = document.getElementById('parentUndoList');
+      if (!container) return;
+
+      if (!Array.isArray(appState.history) || appState.history.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:12px 0; color:#9ca3af; font-size:12px;">
+            暂无操作记录，所有积分记录均正常 ✨
+          </div>
+        `;
+        return;
+      }
+
+      const latest = appState.history[0];
+      const sign = latest.pts >= 0 ? `+${latest.pts}` : `${latest.pts}`;
+      const isRedeem = latest.pts < 0 && (latest.reason.includes('兑换') || latest.reason.includes('🎁') || latest.reason.includes('💰'));
+
+      let html = `
+        <div class="parent-undo-quick-card">
+          <div style="overflow:hidden; flex:1; padding-right:8px;">
+            <div style="font-size:11px; color:#be185d; font-weight:700;">⚡ 最近一笔操作：</div>
+            <div class="parent-undo-quick-text">${escapeHtml(latest.reason)} (${sign}分)</div>
+          </div>
+          <button class="parent-undo-quick-btn" onclick="revokeHistoryItem(0)">
+            ↩️ 撤回此项${isRedeem ? '并退分' : ''}
+          </button>
+        </div>
+      `;
+
+      if (appState.history.length > 1) {
+        html += `<div style="font-size:11px; color:#6b7280; margin: 8px 0 4px 2px; font-weight:600;">更多最近记录：</div>`;
+        for (let i = 1; i < Math.min(5, appState.history.length); i++) {
+          const item = appState.history[i];
+          const itemSign = item.pts >= 0 ? `+${item.pts}` : `${item.pts}`;
+          const isItemPlus = item.pts >= 0;
+          html += `
+            <div class="parent-undo-row">
+              <div style="overflow:hidden; flex:1; padding-right:8px;">
+                <div style="font-size:12px; font-weight:600; color:#1f2937; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${escapeHtml(item.reason)}</div>
+                <div style="font-size:10.5px; color:#9ca3af;">${item.time} · <span style="font-weight:700; color:${isItemPlus ? '#10b981' : '#ef4444'};">${itemSign} 分</span></div>
+              </div>
+              <button class="history-revoke-btn" onclick="revokeHistoryItem(${i})">↩️ 撤回</button>
+            </div>
+          `;
+        }
+      }
+
+      container.innerHTML = html;
+    }
+
+    async function resetWeekData() {
+      const confirmed = await showPrincessConfirm(
+        '确定要开启新的一周吗？\n\n（总积分与历史记录不会被清空，仅将本周字帖与跳绳计次归零重新开始）',
+        {
+          title: '开启新的一周',
+          icon: '🔄',
+          confirmText: '开启新一周',
+          cancelText: '取消'
+        }
+      );
+      if (!confirmed) return;
+
+      appState.weekWritingCount = 0;
+      appState.weekJumpCount = 0;
+      appState.hasClaimedWeeklyWriting = false;
+      appState.hasClaimedWeeklyJump = false;
+      saveState();
+      showPrincessAlert('新的一周已开启，妙绮小公主继续加油！✨', { title: '新的一周 ✨', icon: '🌟' });
+    }
+
+    function exportDataJson() {
+      const json = JSON.stringify(appState, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `杨妙绮好习惯存折备份_${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    async function importDataJson() {
+      const input = await showPrincessPrompt('请粘贴导出的 JSON 备份数据：', '', {
+        title: '导入恢复数据',
+        icon: '📥',
+        placeholder: '在此粘贴完整 JSON 内容'
+      });
+      if (!input) return;
+
+      try {
+        const parsed = JSON.parse(input);
+        if (typeof parsed.score === 'number') {
+          appState = parsed;
+          ensureStateArrays();
+          saveState();
+          showPrincessAlert('数据恢复成功！当前积分：' + appState.score, { title: '恢复成功 ✨', icon: '🎉' });
+        } else {
+          showPrincessAlert('数据格式不正确，缺少 score 字段！', { title: '格式错误', icon: '⚠️' });
+        }
+      } catch (e) {
+        showPrincessAlert('解析失败，请检查复制的内容是否完整！', { title: '解析失败', icon: '❌' });
+      }
+    }
+
+    function exportRecords() {
+      exportDataJson();
+    }
+
+    function showFloatingPoints(text, isMinus = false) {
+      const elem = document.createElement('div');
+      elem.className = 'floating-pts';
+      if (isMinus || text.startsWith('-')) {
+        elem.style.color = '#ef4444';
+        elem.style.textShadow = '0 2px 10px rgba(239, 68, 68, 0.4)';
+      }
+      elem.innerText = text;
+      elem.style.left = '50%';
+      elem.style.top = '40%';
+      document.body.appendChild(elem);
+      setTimeout(() => elem.remove(), 1200);
+    }
+
+    function triggerHaptic() {
+      if (window.navigator && window.navigator.vibrate) {
+        try { window.navigator.vibrate(40); } catch (e) {}
+      }
+    }
+
+    function escapeHtml(str) {
+      return (str || '').replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[m]));
+    }
+
+    /* ==========================================================
+       9. MODAL HELPERS
+       ========================================================== */
+    function openPrincessPicker() {
+      const grid = document.getElementById('princessPickerGrid');
+      if (grid) {
+        grid.innerHTML = PRINCESSES.map(p => `
+          <div class="princess-opt ${p.id === appState.princessId ? 'selected' : ''}" onclick="selectPrincess('${p.id}')">
+            <div class="princess-opt-avatar">
+              <img src="${p.avatar}" alt="${p.name}" onerror="this.onerror=null;this.parentElement.innerHTML='<span style=\\'font-size:24px;\\'>${p.emoji}</span>';" />
+            </div>
+            <span class="princess-opt-name">${p.name}</span>
+          </div>
+        `).join('');
+      }
+      document.getElementById('princessModal').classList.add('active');
+    }
+
+    function selectPrincess(id) {
+      appState.princessId = id;
+      saveState();
+      playSound('coin');
+      openPrincessPicker();
+    }
+
+    function closePrincessPicker() {
+      document.getElementById('princessModal').classList.remove('active');
+    }
+
+    function openFireEyesPicker() {
+      document.getElementById('fireEyesModal').classList.add('active');
+    }
+
+    function closeFireEyesPicker() {
+      document.getElementById('fireEyesModal').classList.remove('active');
+    }
+
+    function earnFireEyes(count) {
+      closeFireEyesPicker();
+      const pts = Math.floor(count / 3) * 5;
+      earnPoints(pts, `🔍 火眼晶晶：圈出${count}个好看字`, true);
+    }
+
+    async function earnCustomFireEyes() {
+      closeFireEyesPicker();
+      const input = await showPrincessPrompt(
+        '请输入本次红笔圈出的好看字总数量：\n（规则：每 3 个好看的字得 5 分）',
+        '3',
+        {
+          title: '火眼晶晶字数输入',
+          icon: '🔍',
+          placeholder: '例如输入 3, 6, 9, 15 等'
+        }
+      );
+      if (!input) return;
+      const count = parseInt(input);
+      if (isNaN(count) || count < 3) {
+        showPrincessAlert('至少需要圈出 3 个好看的字才可以获得奖励哦！', { title: '字数不足3个', icon: '💡' });
+        return;
+      }
+      const pts = Math.floor(count / 3) * 5;
+      const remainder = count % 3;
+      let tip = '';
+      if (remainder > 0) {
+        tip = `\n（多出的 ${remainder} 个好看字，下次再凑 ${3 - remainder} 个就能再得 5 分啦）`;
+      }
+      earnPoints(pts, `🔍 火眼晶晶：圈出${count}个好看字`, true);
+      if (remainder > 0) {
+        setTimeout(() => {
+          showPrincessAlert(`已成功记录 +${pts} 魔法星！${tip}`, { title: '火眼晶晶奖励 ✨', icon: '🔍' });
+        }, 400);
+      }
+    }
+
+    function openHouseworkPicker() {
+      document.getElementById('houseworkModal').classList.add('active');
+    }
+
+    function closeHouseworkPicker() {
+      document.getElementById('houseworkModal').classList.remove('active');
+    }
+
+    function openWeeklyRewardModal() {
+      const container = document.getElementById('weeklyModalBody');
+      if (container) {
+        const writingDone = appState.weekWritingCount >= 4;
+        const writingClaimed = appState.hasClaimedWeeklyWriting;
+        const jumpDone = appState.weekJumpCount >= 4;
+        const jumpClaimed = appState.hasClaimedWeeklyJump;
+
+        container.innerHTML = `
+          <div style="background:#faf5ff; border:1.5px solid #e9d5ff; border-radius:16px; padding:12px; margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <strong style="font-size:13.5px; color:#581c87;">✍️ 本周字帖达标 4 张</strong>
+              <span style="font-weight:800; color:#7928ca;">+20分全勤奖</span>
+            </div>
+            <p style="font-size:11.5px; color:#6b7280; margin-bottom:8px;">当前进度：<strong>${appState.weekWritingCount} / 4 张</strong> ${writingDone ? '(已达标！)' : `(还需 ${4 - appState.weekWritingCount} 张)`}</p>
+            ${writingClaimed ? `
+              <div style="text-align:center; padding:8px; background:#f3e8ff; color:#7928ca; font-size:12.5px; font-weight:800; border-radius:10px;">
+                ✅ 已自动发放全勤奖励 (+20分)
+              </div>
+            ` : (writingDone ? `
+              <button class="task-btn-action" style="width:100%; justify-content:center;" onclick="claimWeeklyWriting()">立即补领字帖全勤奖 (+20分)</button>
+            ` : `
+              <button class="task-btn-action" style="width:100%; justify-content:center; background:#e5e7eb; color:#9ca3af; box-shadow:none; cursor:not-allowed;" disabled>达标4张后自动发放 (+20分)</button>
+            `)}
+          </div>
+
+          <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:16px; padding:12px; margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <strong style="font-size:13.5px; color:#14532d;">🪢 本周跳绳达标 4 次</strong>
+              <span style="font-weight:800; color:#16a34a;">+20分全勤奖</span>
+            </div>
+            <p style="font-size:11.5px; color:#6b7280; margin-bottom:8px;">当前进度：<strong>${appState.weekJumpCount} / 4 次</strong> ${jumpDone ? '(已达标！)' : `(还需 ${4 - appState.weekJumpCount} 次)`}</p>
+            ${jumpClaimed ? `
+              <div style="text-align:center; padding:8px; background:#dcfce7; color:#15803d; font-size:12.5px; font-weight:800; border-radius:10px;">
+                ✅ 已自动发放全勤奖励 (+20分)
+              </div>
+            ` : (jumpDone ? `
+              <button class="task-btn-action" style="width:100%; justify-content:center; background:linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="claimWeeklyJump()">立即补领跳绳全勤奖 (+20分)</button>
+            ` : `
+              <button class="task-btn-action" style="width:100%; justify-content:center; background:#e5e7eb; color:#9ca3af; box-shadow:none; cursor:not-allowed;" disabled>达标4次后自动发放 (+20分)</button>
+            `)}
+          </div>
+        `;
+      }
+      document.getElementById('weeklyModal').classList.add('active');
+    }
+
+    function closeWeeklyModal() {
+      document.getElementById('weeklyModal').classList.remove('active');
+    }
+
+    function openRulesModal() {
+      document.getElementById('rulesModal').classList.add('active');
+    }
+
+    function closeRulesModal() {
+      document.getElementById('rulesModal').classList.remove('active');
+    }
+
+    function closeModals(e) {
+      if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('active');
+      }
+    }
+
+    /* ==========================================================
+       10. FULLSCREEN DISNEY CASTLE FIREWORKS ENGINE & MUSIC LOOP
+       ========================================================== */
+    let fwCanvas, fwCtx;
+    let fireworksAnimId = null;
+    let fireworksArray = [];
+    let particlesArray = [];
+    let meteorsArray = [];
+    let isAutoFireworks = true;
+    let autoFireTimer = 0;
+    let quoteRotateTimer = 0;
+    let quoteIdx = 0;
+
+    class Firework {
+      constructor(targetX, targetY, isSpecialHeart = false) {
+        this.x = fwCanvas.width * (0.35 + Math.random() * 0.3);
+        this.y = fwCanvas.height - 40;
+        this.targetX = targetX;
+        this.targetY = targetY;
+        this.speed = 10 + Math.random() * 4;
+        this.angle = Math.atan2(targetY - this.y, targetX - this.x);
+        this.distanceToTarget = Math.hypot(targetX - this.x, targetY - this.y);
+        this.distanceTraveled = 0;
+        this.trail = [];
+        this.trailLength = 4;
+        this.isSpecialHeart = isSpecialHeart;
+        this.color = `hsl(${Math.floor(Math.random() * 360)}, 100%, 75%)`;
+      }
+
+      update(index) {
+        this.trail.push([this.x, this.y]);
+        if (this.trail.length > this.trailLength) this.trail.shift();
+
+        const vx = Math.cos(this.angle) * this.speed;
+        const vy = Math.sin(this.angle) * this.speed;
+
+        this.x += vx;
+        this.y += vy;
+        this.distanceTraveled += Math.hypot(vx, vy);
+
+        if (this.distanceTraveled >= this.distanceToTarget) {
+          createExplosion(this.targetX, this.targetY, this.color, this.isSpecialHeart);
+          fireworksArray.splice(index, 1);
+        }
+      }
+
+      draw() {
+        fwCtx.beginPath();
+        if (this.trail.length > 0) {
+          fwCtx.moveTo(this.trail[0][0], this.trail[0][1]);
+          for (let p of this.trail) fwCtx.lineTo(p[0], p[1]);
+        } else {
+          fwCtx.moveTo(this.x, this.y);
+          fwCtx.lineTo(this.x, this.y + 6);
+        }
+        fwCtx.strokeStyle = this.color;
+        fwCtx.lineWidth = 2.5;
+        fwCtx.stroke();
+      }
+    }
+
+    class Particle {
+      constructor(x, y, color, type = 'normal') {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.type = type;
+        this.alpha = 1;
+
+        if (type === 'heart') {
+          this.decay = 0.015;
+          this.gravity = 0.04;
+          const t = Math.random() * Math.PI * 2;
+          const r = (16 * Math.pow(Math.sin(t), 3)) * 0.28;
+          const ry = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t)) * 0.28;
+          this.vx = r * (0.8 + Math.random() * 0.3);
+          this.vy = ry * (0.8 + Math.random() * 0.3);
+          this.size = Math.random() * 2.5 + 2;
+        } else if (type === 'willow') {
+          this.decay = 0.009;
+          this.gravity = 0.08;
+          const angle = Math.random() * Math.PI * 2;
+          const speed = Math.random() * 5 + 1;
+          this.vx = Math.cos(angle) * speed;
+          this.vy = Math.sin(angle) * speed;
+          this.size = Math.random() * 2 + 1.2;
+          this.color = '#ffd700';
+        } else {
+          this.decay = Math.random() * 0.015 + 0.012;
+          this.gravity = 0.06;
+          const angle = Math.random() * Math.PI * 2;
+          const speed = Math.random() * 7 + 1.5;
+          this.vx = Math.cos(angle) * speed;
+          this.vy = Math.sin(angle) * speed;
+          this.size = Math.random() * 2.5 + 1.5;
+        }
+      }
+
+      update(index) {
+        this.vy += this.gravity;
+        this.vx *= 0.98;
+        this.vy *= 0.98;
+        this.x += this.vx;
+        this.y += this.vy;
+        this.alpha -= this.decay;
+
+        if (this.alpha <= 0) {
+          particlesArray.splice(index, 1);
+        }
+      }
+
+      draw() {
+        fwCtx.save();
+        fwCtx.globalAlpha = Math.max(0, this.alpha);
+        fwCtx.beginPath();
+        fwCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        fwCtx.fillStyle = this.color;
+        fwCtx.shadowBlur = 8;
+        fwCtx.shadowColor = this.color;
+        fwCtx.fill();
+        fwCtx.restore();
+      }
+    }
+
+    class Meteor {
+      constructor() {
+        this.x = Math.random() * fwCanvas.width * 0.8;
+        this.y = Math.random() * fwCanvas.height * 0.3;
+        this.length = Math.random() * 80 + 40;
+        this.speed = Math.random() * 10 + 12;
+        this.angle = Math.PI / 4 + (Math.random() - 0.5) * 0.2;
+        this.alpha = 1;
+      }
+
+      update(index) {
+        this.x += Math.cos(this.angle) * this.speed;
+        this.y += Math.sin(this.angle) * this.speed;
+        this.alpha -= 0.03;
+        if (this.alpha <= 0) {
+          meteorsArray.splice(index, 1);
+        }
+      }
+
+      draw() {
+        fwCtx.save();
+        fwCtx.globalAlpha = Math.max(0, this.alpha);
+        fwCtx.beginPath();
+        fwCtx.moveTo(this.x, this.y);
+        fwCtx.lineTo(this.x - Math.cos(this.angle) * this.length, this.y - Math.sin(this.angle) * this.length);
+        fwCtx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+        fwCtx.lineWidth = 1.8;
+        fwCtx.stroke();
+        fwCtx.restore();
+      }
+    }
+
+    function createExplosion(x, y, color, isHeart = false) {
+      const randType = isHeart ? 'heart' : (Math.random() < 0.25 ? 'willow' : 'normal');
+      const particleCount = randType === 'heart' ? 70 : (randType === 'willow' ? 85 : 75);
+
+      for (let i = 0; i < particleCount; i++) {
+        particlesArray.push(new Particle(x, y, color, randType));
+      }
+    }
+
+    function loopFireworks() {
+      fwCtx.globalCompositeOperation = 'destination-out';
+      fwCtx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+      fwCtx.fillRect(0, 0, fwCanvas.width, fwCanvas.height);
+      fwCtx.globalCompositeOperation = 'lighter';
+
+      if (isAutoFireworks) {
+        autoFireTimer++;
+        if (autoFireTimer % 45 === 0) {
+          const tx = fwCanvas.width * (0.15 + Math.random() * 0.7);
+          const ty = fwCanvas.height * (0.12 + Math.random() * 0.4);
+          fireworksArray.push(new Firework(tx, ty));
+        }
+
+        if (autoFireTimer % 200 === 0 && Math.random() < 0.6) {
+          meteorsArray.push(new Meteor());
+        }
+
+        quoteRotateTimer++;
+        if (quoteRotateTimer % 180 === 0) {
+          quoteIdx = (quoteIdx + 1) % FIREWORK_QUOTES.length;
+          const qElem = document.getElementById('fireworksBannerQuote');
+          if (qElem) {
+            qElem.style.opacity = 0;
+            setTimeout(() => {
+              qElem.innerText = FIREWORK_QUOTES[quoteIdx];
+              qElem.style.opacity = 1;
+            }, 600);
+          }
+        }
+      }
+
+      for (let i = meteorsArray.length - 1; i >= 0; i--) {
+        meteorsArray[i].update(i);
+        if (meteorsArray[i]) meteorsArray[i].draw();
+      }
+
+      for (let i = fireworksArray.length - 1; i >= 0; i--) {
+        fireworksArray[i].update(i);
+        if (fireworksArray[i]) fireworksArray[i].draw();
+      }
+
+      for (let i = particlesArray.length - 1; i >= 0; i--) {
+        particlesArray[i].update(i);
+        if (particlesArray[i]) particlesArray[i].draw();
+      }
+
+      fireworksAnimId = requestAnimationFrame(loopFireworks);
+    }
+
+    function openFireworksView() {
+      isFireworksOpen = true;
+      const container = document.getElementById('fireworksView');
+      container.classList.add('active');
+
+      fwCanvas = document.getElementById('fireworksCanvas');
+      fwCtx = fwCanvas.getContext('2d');
+      fwCanvas.width = window.innerWidth;
+      fwCanvas.height = window.innerHeight;
+
+      fwCanvas.onpointerdown = function(e) {
+        const rect = fwCanvas.getBoundingClientRect();
+        const tx = e.clientX - rect.left;
+        const ty = e.clientY - rect.top;
+        if (ty < fwCanvas.height * 0.75) {
+          fireworksArray.push(new Firework(tx, ty));
+        }
+      };
+
+      const qElem = document.getElementById('fireworksBannerQuote');
+      if (qElem) qElem.style.opacity = 1;
+
+      // 播放《快乐无边》背景音乐，并在 1 分 28 秒（88秒）循环
+      playFireworksBgm();
+
+      if (!fireworksAnimId) {
+        loopFireworks();
+      }
+    }
+
+    function closeFireworksView() {
+      isFireworksOpen = false;
+      document.getElementById('fireworksView').classList.remove('active');
+      if (fireworksAnimId) {
+        cancelAnimationFrame(fireworksAnimId);
+        fireworksAnimId = null;
+      }
+      stopFireworksBgm();
+    }
+
+    let _bgmLoopInterval = null;
+    function playFireworksBgm() {
+      const audio = document.getElementById('fireworksAudio');
+      if (!audio) return;
+
+      audio.currentTime = 0;
+      audio.volume = 0.9;
+      audio.play().catch(e => console.log('BGM play deferred', e));
+
+      // 严格限制：只播放到 1分 28 秒（88 秒），然后立即回到开头循环播放
+      if (_bgmLoopInterval) clearInterval(_bgmLoopInterval);
+      _bgmLoopInterval = setInterval(() => {
+        if (!isFireworksOpen) {
+          clearInterval(_bgmLoopInterval);
+          return;
+        }
+        if (audio.currentTime >= 88) {
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
+        }
+      }, 500);
+    }
+
+    function stopFireworksBgm() {
+      const audio = document.getElementById('fireworksAudio');
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+      if (_bgmLoopInterval) {
+        clearInterval(_bgmLoopInterval);
+        _bgmLoopInterval = null;
+      }
+    }
+
+    function toggleAutoFireworks() {
+      isAutoFireworks = !isAutoFireworks;
+      const btn = document.getElementById('autoFwBtn');
+      if (btn) btn.innerText = isAutoFireworks ? '🎆 自动燃放: 开' : '🎆 自动燃放: 关';
+    }
+
+    function launchHeartFirework() {
+      if (fwCanvas) {
+        const tx = fwCanvas.width * (0.3 + Math.random() * 0.4);
+        const ty = fwCanvas.height * (0.15 + Math.random() * 0.25);
+        fireworksArray.push(new Firework(tx, ty, true));
+      }
+    }
+
+    function triggerGrandFinale() {
+      if (!document.getElementById('fireworksView').classList.contains('active')) {
+        openFireworksView();
+      }
+
+      for (let i = 0; i < 16; i++) {
+        setTimeout(() => {
+          if (fwCanvas) {
+            const tx = fwCanvas.width * (0.1 + Math.random() * 0.8);
+            const ty = fwCanvas.height * (0.1 + Math.random() * 0.35);
+            fireworksArray.push(new Firework(tx, ty, i % 3 === 0));
+          }
+        }, i * 220);
+      }
+    }
+
+    /* ==========================================================
+       11. AMBIENT BACKGROUND STARS
+       ========================================================== */
+    function initAmbientSparkles() {
+      const canvas = document.getElementById('ambientCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      const stars = [];
+      for (let i = 0; i < 35; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 1.5 + 0.5,
+          alpha: Math.random(),
+          speed: Math.random() * 0.02 + 0.01
+        });
+      }
+
+      function drawStars() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        stars.forEach(s => {
+          s.alpha += s.speed;
+          if (s.alpha > 1 || s.alpha < 0) s.speed = -s.speed;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(168, 85, 247, ${Math.abs(s.alpha) * 0.35})`;
+          ctx.fill();
+        });
+        requestAnimationFrame(drawStars);
+      }
+      drawStars();
+    }
+
+    /* ==========================================================
+       12. INITIALIZATION & RECURRING SYNC
+       ========================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      initAmbientSparkles();
+
+      // 每 5 秒静默与电脑服务端同步，多台设备数据实时刷新互通
+      setInterval(() => {
+        if (!document.hidden && isServerSynced) {
+          syncFromServer();
+        }
+      }, 5000);
+
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && isServerSynced) {
+          syncFromServer();
+        }
+      });
+
+      window.addEventListener('resize', () => {
+        if (fwCanvas && isFireworksOpen) {
+          fwCanvas.width = window.innerWidth;
+          fwCanvas.height = window.innerHeight;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

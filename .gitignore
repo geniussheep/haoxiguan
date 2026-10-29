@@ -1,0 +1,21 @@
+# Operating System & Editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Runtime Logs, Temp Files & Backups
+*.log
+*.bak
+*.tmp
+
+# SQLite WAL runtime temporary files (keep persistent habit.db)
+*-shm
+*-wal

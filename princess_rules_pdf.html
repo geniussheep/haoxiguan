@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>杨妙绮小公主的魔法成长守则</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 8mm 10mm;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", "Microsoft YaHei", sans-serif;
+      color: #2e1065;
+      background: #ffffff;
+      line-height: 1.4;
+    }
+    .page-container {
+      width: 100%;
+      height: 281mm;
+      max-height: 281mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    /* 1. Header */
+    .royal-header {
+      background: linear-gradient(135deg, #7928ca 0%, #c026d3 50%, #ff4d6d 100%);
+      border-radius: 14px;
+      padding: 11px 16px;
+      color: #fff;
+      text-align: center;
+      box-shadow: 0 4px 14px rgba(121, 40, 202, 0.25);
+      border: 2px solid #ffd166;
+    }
+    .royal-title {
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .royal-subtitle {
+      font-size: 13px;
+      color: #ffe4e6;
+      margin-top: 3px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    /* Section Headers */
+    .section-title-bar {
+      font-size: 15px;
+      font-weight: 900;
+      padding: 6px 12px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .title-earn {
+      background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+      color: #6b21a8;
+      border-left: 5px solid #7928ca;
+    }
+    .title-shop {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      color: #92400e;
+      border-left: 5px solid #f59e0b;
+    }
+
+    /* 2. Tasks Vertical Stack */
+    .tasks-container {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .task-card {
+      background: #faf5ff;
+      border: 1.5px solid #e9d5ff;
+      border-radius: 10px;
+      padding: 7px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .task-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+    .task-icon-circle {
+      font-size: 22px;
+      width: 38px;
+      height: 38px;
+      background: #fff;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid #d8b4fe;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(121, 40, 202, 0.1);
+    }
+    .task-info {
+      flex: 1;
+    }
+    .task-name-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14.5px;
+      font-weight: 900;
+      color: #1e1b4b;
+    }
+    .task-detail {
+      font-size: 12px;
+      color: #4b5563;
+      margin-top: 1px;
+      line-height: 1.35;
+    }
+    .task-badges-box {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    /* Badges */
+    .badge-tag {
+      font-size: 12px;
+      font-weight: 900;
+      padding: 3px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+    .badge-purple { background: #f3e8ff; color: #7e22ce; border: 1px solid #d8b4fe; }
+    .badge-green { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+    .badge-orange { background: #ffedd5; color: #c2410c; border: 1px solid #fdba74; }
+    .badge-red { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+
+    /* 3. Shop Grid (2 Columns, 8 Cards) */
+    .shop-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .shop-card {
+      border-radius: 10px;
+      padding: 7px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1.5px solid #f3f4f6;
+      background: #fafafa;
+    }
+    .shop-card.hero-disney {
+      grid-column: span 2;
+      background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%);
+      border: 2px solid #d946ef;
+      box-shadow: 0 3px 10px rgba(217, 70, 239, 0.15);
+      padding: 8px 12px;
+    }
+    .shop-card.hero-feast {
+      background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+      border: 1.5px solid #fecdd3;
+    }
+    .shop-item-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .shop-item-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .shop-item-title {
+      font-size: 13px;
+      font-weight: 900;
+      color: #1f2937;
+    }
+    .shop-item-desc {
+      font-size: 11px;
+      color: #6b7280;
+    }
+
+    /* 4. Math Banner */
+    .math-banner {
+      background: linear-gradient(135deg, #fef9c3 0%, #fef08a 100%);
+      border: 2px solid #eab308;
+      border-radius: 10px;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #854d0e;
+      box-shadow: 0 3px 8px rgba(234, 179, 8, 0.15);
+    }
+    .math-title {
+      font-size: 13.5px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+    .math-desc {
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+    .math-highlight {
+      color: #b45309;
+      font-weight: 900;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    /* 5. Oath & Signatures */
+    .oath-panel {
+      background: #faf5ff;
+      border: 2px dashed #c084fc;
+      border-radius: 12px;
+      padding: 8px 16px 10px;
+      text-align: center;
+    }
+    .oath-title {
+      font-size: 13.5px;
+      font-weight: 900;
+      color: #7e22ce;
+      margin-bottom: 3px;
+      letter-spacing: 1px;
+    }
+    .oath-text {
+      font-size: 13px;
+      font-weight: 800;
+      color: #4c1d95;
+      line-height: 1.45;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+    .signature-row {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding-top: 6px;
+      border-top: 1.5px dashed #e9d5ff;
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #374151;
+    }
+    .sign-field {
+      border-bottom: 2px solid #6b7280;
+      display: inline-block;
+      width: 110px;
+      height: 16px;
+      vertical-align: bottom;
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-container">
+
+    <!-- 1. Header -->
+    <header class="royal-header">
+      <div class="royal-title">
+        <span>👑</span>
+        <span>杨妙绮小公主的魔法成长守则</span>
+        <span>✨</span>
+      </div>
+      <div class="royal-subtitle">
+        用每一个自律的好习惯收集魔法星，点亮属于你的迪士尼城堡烟花盛典！
+      </div>
+    </header>
+
+    <!-- 2. Part 1: Tasks (Full Width Vertical Stack) -->
+    <section>
+      <div class="section-title-bar title-earn">
+        <span>🌟 第一步：四大好习惯·如何赚取魔法星？</span>
+        <span style="font-size: 11.5px; font-weight: 700;">每次完成·即时打卡入账</span>
+      </div>
+
+      <div class="tasks-container">
+        <!-- Task 1: Writing -->
+        <div class="task-card">
+          <div class="task-left">
+            <div class="task-icon-circle">✍️</div>
+            <div class="task-info">
+              <div class="task-name-row">
+                <span>贝儿的规范练字</span>
+                <span style="font-size:11.5px; color:#6b7280; font-weight:normal;">（坐姿端正，一笔一画把字写在田字格中间）</span>
+              </div>
+              <div class="task-detail">
+                写完 1 张A4字帖奖 <strong>40分</strong> ｜ 火眼晶晶：圈出好看字<strong>每 3 个字就得 5分</strong>（多写多得） ｜ <strong>每周写满 4 张额外奖 20分 全勤大礼包！</strong>
+              </div>
+            </div>
+          </div>
+          <div class="task-badges-box">
+            <span class="badge-tag badge-purple">+40分/张</span>
+            <span class="badge-tag badge-red">每3字+5分</span>
+            <span class="badge-tag badge-orange">+20分全勤</span>
+          </div>
+        </div>
+
+        <!-- Task 2: Jump Rope -->
+        <div class="task-card">
+          <div class="task-left">
+            <div class="task-icon-circle">🪢</div>
+            <div class="task-info">
+              <div class="task-name-row">
+                <span>乐佩的阳光跳绳</span>
+                <span style="font-size:11.5px; color:#6b7280; font-weight:normal;">（像长发公主一样轻盈飞扬，身体棒棒长得高）</span>
+              </div>
+              <div class="task-detail">
+                跳满 500 个绳奖 <strong>25分</strong>（可分 2~3 组跳完计总数） ｜ <strong>每周顺利完成 4 次额外奖 20分 运动全勤！</strong>
+              </div>
+            </div>
+          </div>
+          <div class="task-badges-box">
+            <span class="badge-tag badge-green">+25分/次</span>
+            <span class="badge-tag badge-orange">+20分全勤</span>
+          </div>
+        </div>
+
+        <!-- Task 3: Morning Punctual -->
+        <div class="task-card">
+          <div class="task-left">
+            <div class="task-icon-circle">⏰</div>
+            <div class="task-info">
+              <div class="task-name-row">
+                <span>灰姑娘晨间守时</span>
+                <span style="font-size:11.5px; color:#6b7280; font-weight:normal;">（早晨按时起床不赖床，穿戴整齐微笑背书包出发）</span>
+              </div>
+              <div class="task-detail">
+                上学日约定时间前准备完毕准时出门奖 <strong>10分</strong> ｜ <strong style="color:#b91c1c;">⚠️ 提醒1次后仍严重磨蹭迟到扣 20分（明日早起赢回）</strong>
+              </div>
+            </div>
+          </div>
+          <div class="task-badges-box">
+            <span class="badge-tag badge-green">+10分/天</span>
+            <span class="badge-tag badge-red">-20分迟到</span>
+          </div>
+        </div>
+
+        <!-- Task 4: Housework -->
+        <div class="task-card">
+          <div class="task-left">
+            <div class="task-icon-circle">🧹</div>
+            <div class="task-info">
+              <div class="task-name-row">
+                <span>白雪公主勤劳家务</span>
+                <span style="font-size:11.5px; color:#6b7280; font-weight:normal;">（自己的事情自己做，主动当爸妈的小帮手）</span>
+              </div>
+              <div class="task-detail">
+                主动打包扔垃圾 <strong>+10分</strong> ｜ 叠衣服/收衣服/晾晒 <strong>+15分</strong> ｜ 饭后洗碗收拾餐桌 <strong>+20分</strong>（多劳多得）
+              </div>
+            </div>
+          </div>
+          <div class="task-badges-box">
+            <span class="badge-tag badge-orange">+10 ~ 20分</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Part 2: Wish Mall -->
+    <section>
+      <div class="section-title-bar title-shop">
+        <span>🏰 第二步：奇妙仙子心愿屋·魔法积分怎么花？</span>
+        <span style="font-size: 11.5px; font-weight: 700;">手机存折随时自主兑换</span>
+      </div>
+
+      <div class="shop-grid">
+        <!-- Hero: Disney -->
+        <div class="shop-card hero-disney">
+          <div class="shop-item-left">
+            <span class="shop-item-icon" style="font-size:24px;">🏰</span>
+            <div>
+              <div class="shop-item-title" style="color:#7e22ce; font-size:14.5px;">【超级终极大奖】去迪士尼乐园畅玩（年卡出游）</div>
+              <div class="shop-item-desc">和爸爸妈妈畅玩一整天，在迪士尼城堡前看最盛大的真烟花盛典！</div>
+            </div>
+          </div>
+          <span class="badge-tag badge-purple" style="font-size:14px; padding:4px 12px;">500 分</span>
+        </div>
+
+        <!-- Feast -->
+        <div class="shop-card hero-feast">
+          <div class="shop-item-left">
+            <span class="shop-item-icon">🍽️</span>
+            <div>
+              <div class="shop-item-title" style="color:#b91c1c;">外出吃心仪大餐（预算200~300元）</div>
+              <div class="shop-item-desc">全家聚餐！妙绮钦定披萨/牛排/烤肉/日料</div>
+            </div>
+          </div>
+          <span class="badge-tag badge-red" style="font-size:13px;">200 分</span>
+        </div>
+
+        <!-- Toy -->
+        <div class="shop-card">
+          <div class="shop-item-left">
+            <span class="shop-item-icon">🎁✨</span>
+            <div>
+              <div class="shop-item-title">心仪迪士尼盲盒 / 心愿玩具</div>
+              <div class="shop-item-desc">挑选一个喜欢的玩具或盲盒（50元以内）</div>
+            </div>
+          </div>
+          <span class="badge-tag badge-orange" style="font-size:12.5px;">300 分</span>
+        </div>
+
+        <!-- Book -->
+        <div class="shop-card">
+          <div class="shop-item-left">
+            <span class="shop-item-icon">📚🌸</span>
+            <div>
+              <div class="shop-item-title">精美公主贴纸书 / 精装绘本一本</div>
+              <div class="shop-item-desc">书店自选一本喜欢的课外读物</div>
+            </div>
+          </div>
+          <span class="badge-tag badge-orange" style="font-size:12.5px;">150 分</span>
+        </div>
+
+        <!-- Ice Cream -->
+        <div class="shop-card">
+          <div class="shop-item-left">
+            <span class="shop-item-icon">🍦🍰</span>
+            <div>
+              <div class="shop-item-title">自选一份冰淇淋 / 甜品蛋糕</div>
+              <div class="shop-item-desc">甜蜜小确幸，当天随时兑现</div>
+            </div>
+          </div>
+          <span class="badge-tag badge-green" style="font-size:12.5px;">30 分</span>
+        </div>
+
+        <!-- Cash Bank -->
+        <div class="shop-card" style="background:#fefce8; border-color:#fef08a;">
+          <div class="shop-item-left">
+            <span class="shop-item-icon">💰🪙</span>
+            <div>
+              <div class="shop-item-title" style="color:#854d0e;">零用钱存钱罐（自主支配）</div>
+              <div class="shop-item-desc">存入透明小存钱罐，自主支配买大件</div>
+            </div>
+          </div>
+          <span class="badge-tag" style="background:#fef08a; color:#854d0e; font-size:12px; font-weight:900;">10分 = 1元</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Math Banner -->
+    <div class="math-banner">
+      <div class="math-title">
+        <span>🔮</span>
+        <span>妙绮小公主的魔法算术题：</span>
+      </div>
+      <div class="math-desc">
+        写字(200) + 跳绳(120) + 守时(50) + 家务(30) ≈ <span class="math-highlight">每周轻松积攒 400 积分！</span><br>
+        只要认真坚持 <strong>3~4天</strong> 就能兑换心仪大餐，坚持 <strong>1周多</strong> 就能解锁 500 分去迪士尼看真烟花！
+      </div>
+    </div>
+
+    <!-- 5. Oath & Signatures -->
+    <div class="oath-panel">
+      <div class="oath-title">📜 杨妙绮小公主的星光誓言</div>
+      <div class="oath-text">
+        “写字认真不敷衍，横平竖直最端正；跳绳飞快身体棒，早起准时最漂亮！<br>
+        勤劳勇敢爱劳动，自己的事情自己做；用我的好习惯双手，点亮迪士尼城堡的夜空！”
+      </div>
+      <div class="signature-row">
+        <div>👑 努力的小主人（妙绮）：<span class="sign-field"></span></div>
+        <div>🏰 全力支持你的爸妈：<span class="sign-field"></span></div>
+        <div>📅 签约吉日：2026 年 &nbsp;&nbsp;&nbsp;&nbsp; 月 &nbsp;&nbsp;&nbsp;&nbsp; 日</div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
