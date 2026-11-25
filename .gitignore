@@ -19,3 +19,4 @@ __pycache__/
 # SQLite WAL runtime temporary files (keep persistent habit.db)
 *-shm
 *-wal
+backups/
