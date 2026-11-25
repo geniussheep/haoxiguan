@@ -9,7 +9,7 @@ import json
 import os
 import sqlite3
 import threading
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class HabitDB:
     def __init__(self, db_path, json_fallback_path=None):
@@ -17,6 +17,7 @@ class HabitDB:
         self.json_fallback_path = os.path.abspath(json_fallback_path) if json_fallback_path else None
         self._lock = threading.Lock()
         self._local = threading.local()
+        self._last_checked_period = None
         self.init_schema()
         self.auto_migrate_from_json()
 
@@ -46,6 +47,7 @@ class HabitDB:
                 has_claimed_weekly_jump INTEGER NOT NULL DEFAULT 0,
                 today_earned INTEGER NOT NULL DEFAULT 0,
                 last_check_date TEXT NOT NULL DEFAULT '',
+                last_weekly_reset TEXT NOT NULL DEFAULT '',
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
 
@@ -81,6 +83,10 @@ class HabitDB:
                 sort_order INTEGER NOT NULL DEFAULT 0
             );
             """)
+            cur.execute("PRAGMA table_info(habit_profile)")
+            cols = {row["name"] for row in cur.fetchall()}
+            if "last_weekly_reset" not in cols:
+                cur.execute("ALTER TABLE habit_profile ADD COLUMN last_weekly_reset TEXT NOT NULL DEFAULT ''")
             conn.commit()
 
     def auto_migrate_from_json(self):
@@ -174,54 +180,115 @@ class HabitDB:
             except Exception as e:
                 print(f"[SQLite] 迁移 JSON 失败: {e}")
 
-    def get_state(self):
-        """组装符合前端全量规范的 state 字典"""
+    @staticmethod
+    def get_current_reset_period(now=None):
+        current = now or datetime.now()
+        shifted = current - timedelta(hours=1)
+        iso_year, iso_week, _ = shifted.isocalendar()
+        return f"{iso_year}-W{iso_week:02d}"
+
+    def _assemble_state_locked(self, cur):
+        cur.execute("SELECT * FROM habit_profile WHERE id=1")
+        prof_row = cur.fetchone()
+        if not prof_row:
+            return {}
+
+        prof = dict(prof_row)
+
+        cur.execute("SELECT pts, reason, display_time as time FROM habit_history WHERE is_revoked = 0 ORDER BY id DESC")
+        history = [dict(r) for r in cur.fetchall()]
+
+        cur.execute("SELECT id, name, cost, description as desc, icon, is_grand as isGrand, is_builtin as isBuiltin FROM habit_prizes WHERE status = 1 ORDER BY sort_order ASC")
+        prizes = []
+        for r in cur.fetchall():
+            p = dict(r)
+            p["isGrand"] = bool(p["isGrand"])
+            p["isBuiltin"] = bool(p["isBuiltin"])
+            prizes.append(p)
+
+        cur.execute("SELECT title FROM habit_custom_rules WHERE category='earn' ORDER BY sort_order ASC, id ASC")
+        custom_reasons = [r["title"] for r in cur.fetchall()]
+
+        cur.execute("SELECT title FROM habit_custom_rules WHERE category='deduct' ORDER BY sort_order ASC, id ASC")
+        custom_deduct_reasons = [r["title"] for r in cur.fetchall()]
+
+        return {
+            "score": prof["score"],
+            "princessId": prof["princess_id"],
+            "soundEnabled": bool(prof["sound_enabled"]),
+            "history": history,
+            "weekWritingCount": prof["week_writing_count"],
+            "weekJumpCount": prof["week_jump_count"],
+            "hasClaimedWeeklyWriting": bool(prof["has_claimed_weekly_writing"]),
+            "hasClaimedWeeklyJump": bool(prof["has_claimed_weekly_jump"]),
+            "todayEarned": prof["today_earned"],
+            "lastCheckDate": prof["last_check_date"],
+            "customReasons": custom_reasons,
+            "customDeductReasons": custom_deduct_reasons,
+            "prizes": prizes
+        }
+
+    def check_and_perform_weekly_reset(self, now=None):
+        current_period = self.get_current_reset_period(now)
+        if now is None and self._last_checked_period == current_period:
+            return False
+
         with self._lock:
             conn = self._get_conn()
             cur = conn.cursor()
+            cur.execute("SELECT last_weekly_reset FROM habit_profile WHERE id=1")
+            row = cur.fetchone()
+            if not row:
+                return False
 
-            cur.execute("SELECT * FROM habit_profile WHERE id=1")
-            prof_row = cur.fetchone()
-            if not prof_row:
-                return {}
+            last_reset = row["last_weekly_reset"] or ""
+            if last_reset == "":
+                cur.execute(
+                    "UPDATE habit_profile SET last_weekly_reset = ? WHERE id = 1",
+                    (current_period,)
+                )
+                conn.commit()
+                if now is None:
+                    self._last_checked_period = current_period
+                return False
 
-            prof = dict(prof_row)
+            if last_reset >= current_period:
+                if now is None:
+                    self._last_checked_period = current_period
+                return False
 
-            # 读取历史明细 (未撤销项，最新在最前)
-            cur.execute("SELECT pts, reason, display_time as time FROM habit_history WHERE is_revoked = 0 ORDER BY id DESC")
-            history = [dict(r) for r in cur.fetchall()]
+            cur.execute("""
+                UPDATE habit_profile
+                SET week_writing_count = 0,
+                    week_jump_count = 0,
+                    has_claimed_weekly_writing = 0,
+                    has_claimed_weekly_jump = 0,
+                    last_weekly_reset = ?,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = 1
+            """, (current_period,))
+            conn.commit()
+            if now is None:
+                self._last_checked_period = current_period
 
-            # 读取奖品商城
-            cur.execute("SELECT id, name, cost, description as desc, icon, is_grand as isGrand, is_builtin as isBuiltin FROM habit_prizes WHERE status = 1 ORDER BY sort_order ASC")
-            prizes = []
-            for r in cur.fetchall():
-                p = dict(r)
-                p["isGrand"] = bool(p["isGrand"])
-                p["isBuiltin"] = bool(p["isBuiltin"])
-                prizes.append(p)
+            if self.json_fallback_path:
+                state = self._assemble_state_locked(cur)
+                try:
+                    with open(self.json_fallback_path, "w", encoding="utf-8") as fp:
+                        json.dump(state, fp, ensure_ascii=False, indent=2)
+                except Exception as e:
+                    print(f"[SQLite] 备份写入 JSON 警告: {e}")
 
-            # 读取自定义加减分项
-            cur.execute("SELECT title FROM habit_custom_rules WHERE category='earn' ORDER BY sort_order ASC, id ASC")
-            custom_reasons = [r["title"] for r in cur.fetchall()]
+            print(f"[WeeklyReset] 已自动开启新的一周 ({last_reset} -> {current_period})，本周练字与跳绳计次已归零！")
+            return True
 
-            cur.execute("SELECT title FROM habit_custom_rules WHERE category='deduct' ORDER BY sort_order ASC, id ASC")
-            custom_deduct_reasons = [r["title"] for r in cur.fetchall()]
-
-            return {
-                "score": prof["score"],
-                "princessId": prof["princess_id"],
-                "soundEnabled": bool(prof["sound_enabled"]),
-                "history": history,
-                "weekWritingCount": prof["week_writing_count"],
-                "weekJumpCount": prof["week_jump_count"],
-                "hasClaimedWeeklyWriting": bool(prof["has_claimed_weekly_writing"]),
-                "hasClaimedWeeklyJump": bool(prof["has_claimed_weekly_jump"]),
-                "todayEarned": prof["today_earned"],
-                "lastCheckDate": prof["last_check_date"],
-                "customReasons": custom_reasons,
-                "customDeductReasons": custom_deduct_reasons,
-                "prizes": prizes
-            }
+    def get_state(self):
+        """组装符合前端全量规范的 state 字典"""
+        self.check_and_perform_weekly_reset()
+        with self._lock:
+            conn = self._get_conn()
+            cur = conn.cursor()
+            return self._assemble_state_locked(cur)
 
     def save_state(self, state):
         """保存全量 state 字典到 SQLite"""
@@ -233,13 +300,9 @@ class HabitDB:
             cur = conn.cursor()
 
             try:
-                # 1. 更新全局 profile
-                cur.execute("""
-                INSERT OR REPLACE INTO habit_profile (
-                    id, score, princess_id, sound_enabled, week_writing_count, week_jump_count,
-                    has_claimed_weekly_writing, has_claimed_weekly_jump, today_earned, last_check_date, updated_at
-                ) VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
-                """, (
+                cur.execute("SELECT count(*) as c FROM habit_profile WHERE id=1")
+                exists = cur.fetchone()["c"] > 0
+                profile_params = (
                     state.get("score", 0),
                     state.get("princessId", "belle"),
                     1 if state.get("soundEnabled", True) else 0,
@@ -249,7 +312,24 @@ class HabitDB:
                     1 if state.get("hasClaimedWeeklyJump", False) else 0,
                     state.get("todayEarned", 0),
                     state.get("lastCheckDate", "")
-                ))
+                )
+                if exists:
+                    cur.execute("""
+                    UPDATE habit_profile
+                    SET score = ?, princess_id = ?, sound_enabled = ?,
+                        week_writing_count = ?, week_jump_count = ?,
+                        has_claimed_weekly_writing = ?, has_claimed_weekly_jump = ?,
+                        today_earned = ?, last_check_date = ?, updated_at = CURRENT_TIMESTAMP
+                    WHERE id = 1
+                    """, profile_params)
+                else:
+                    cur.execute("""
+                    INSERT INTO habit_profile (
+                        id, score, princess_id, sound_enabled, week_writing_count, week_jump_count,
+                        has_claimed_weekly_writing, has_claimed_weekly_jump, today_earned, last_check_date,
+                        last_weekly_reset, updated_at
+                    ) VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+                    """, profile_params + (self.get_current_reset_period(),))
 
                 # 2. 如果包含 history 数组，同步更新历史表
                 if "history" in state and isinstance(state["history"], list):

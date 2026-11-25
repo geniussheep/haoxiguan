@@ -14,6 +14,8 @@ import socket
 import socketserver
 import subprocess
 import sys
+import threading
+import time
 import webbrowser
 
 from db import HabitDB
@@ -259,6 +261,17 @@ def main():
 
     # 初始化并连接 SQLite
     db = HabitDB(DB_FILE, JSON_FILE)
+    db.check_and_perform_weekly_reset()
+
+    def weekly_reset_worker():
+        while True:
+            time.sleep(60)
+            try:
+                db.check_and_perform_weekly_reset()
+            except Exception as e:
+                print(f"[WeeklyReset] 定时检查异常: {e}")
+
+    threading.Thread(target=weekly_reset_worker, daemon=True).start()
 
     lan_ip = get_best_lan_ip()
     url = f"http://{lan_ip}:{args.port}/"
