@@ -1,8 +1,13 @@
 {
-  "score": 630,
+  "score": 640,
   "princessId": "elsa",
   "soundEnabled": true,
   "history": [
+    {
+      "pts": 10,
+      "reason": "⏰ 晨间准时出发小标兵",
+      "time": "11/26 20:40"
+    },
     {
       "pts": 10,
       "reason": "✨ 跳绳800",
@@ -318,8 +323,8 @@
   "weekJumpCount": 1,
   "hasClaimedWeeklyWriting": false,
   "hasClaimedWeeklyJump": false,
-  "todayEarned": 35,
-  "lastCheckDate": "Wed Nov 25 2026",
+  "todayEarned": 10,
+  "lastCheckDate": "Thu Nov 26 2026",
   "customReasons": [
     "跳绳800",
     "及时完成作业",
