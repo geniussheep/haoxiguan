@@ -1,8 +1,18 @@
 {
-  "score": 650,
+  "score": 175,
   "princessId": "elsa",
   "soundEnabled": true,
   "history": [
+    {
+      "pts": -500,
+      "reason": "🎁 兑换心愿：迪士尼乐园奇妙之旅（年卡出游）",
+      "time": "11/28 18:05"
+    },
+    {
+      "pts": 25,
+      "reason": "🪢 跳绳达标500个",
+      "time": "11/28 18:05"
+    },
     {
       "pts": 10,
       "reason": "⏰ 晨间准时出发小标兵",
@@ -325,11 +335,11 @@
     }
   ],
   "weekWritingCount": 0,
-  "weekJumpCount": 1,
+  "weekJumpCount": 2,
   "hasClaimedWeeklyWriting": false,
   "hasClaimedWeeklyJump": false,
-  "todayEarned": 10,
-  "lastCheckDate": "Fri Nov 27 2026",
+  "todayEarned": 25,
+  "lastCheckDate": "Sat Nov 28 2026",
   "customReasons": [
     "跳绳800",
     "及时完成作业",
